@@ -19,6 +19,7 @@ import {
   FileText,
   Newspaper,
   Zap,
+  Bot,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -39,6 +40,7 @@ const iconMap: Record<string, React.ElementType> = {
   FileText,
   Newspaper,
   Zap,
+  Bot,
 };
 
 // Unique colors for each component icon - using cyan/teal for dark mode match
@@ -59,6 +61,7 @@ const iconColors: Record<string, { bg: string; icon: string }> = {
   team: { bg: 'bg-teal-500/20 dark:bg-teal-400/20', icon: 'text-teal-600 dark:text-teal-400' },
   contact: { bg: 'bg-blue-500/20 dark:bg-blue-400/20', icon: 'text-blue-600 dark:text-blue-400' },
   blog: { bg: 'bg-lime-500/20 dark:bg-lime-400/20', icon: 'text-lime-600 dark:text-lime-400' },
+  aiBot: { bg: 'bg-violet-500/20 dark:bg-violet-400/20', icon: 'text-violet-600 dark:text-violet-400' },
 };
 
 interface DraggableItemProps {

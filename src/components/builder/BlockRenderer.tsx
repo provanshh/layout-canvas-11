@@ -15,6 +15,7 @@ import { TeamBlock } from './blocks/TeamBlock';
 import { BlogBlock } from './blocks/BlogBlock';
 import { NewsletterBlock } from './blocks/NewsletterBlock';
 import { CTABannerBlock } from './blocks/CTABannerBlock';
+import { AIBotBlock } from './blocks/AIBotBlock';
 import { ButtonEditConfig, TextEditConfig, ImageEditConfig } from './types';
 
 export type { ButtonEditConfig, TextEditConfig, ImageEditConfig };
@@ -59,6 +60,7 @@ export const BlockRenderer = ({
     blog: BlogBlock,
     newsletter: NewsletterBlock,
     ctaBanner: CTABannerBlock,
+    aiBot: AIBotBlock,
   };
 
   const Component = blockComponents[block.type];

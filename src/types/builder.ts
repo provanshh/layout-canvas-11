@@ -14,7 +14,8 @@ export type ComponentType =
   | 'team'
   | 'blog'
   | 'newsletter'
-  | 'ctaBanner';
+  | 'ctaBanner'
+  | 'aiBot';
 
 export interface BlockStyles {
   paddingTop?: string;

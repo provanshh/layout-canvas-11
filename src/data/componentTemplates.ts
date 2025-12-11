@@ -242,4 +242,17 @@ export const componentTemplates: ComponentTemplate[] = [
       secondaryButtonText: 'Learn More',
     },
   },
+  {
+    type: 'aiBot',
+    label: 'AI Chatbot',
+    icon: 'Bot',
+    description: 'Floating AI chat assistant',
+    defaultContent: {
+      botName: 'AI Assistant',
+      welcomeMessage: 'Hi! How can I help you today?',
+      autoResponse: "Thanks for your message! I'll get back to you shortly.",
+      inputPlaceholder: 'Type a message...',
+      botColor: '#6366f1',
+    },
+  },
 ];
