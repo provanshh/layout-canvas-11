@@ -1,15 +1,17 @@
 import { ComponentBlock } from '@/types/builder';
 import { EditableText } from '../EditableText';
 import { EditableButton } from '../EditableButton';
+import { TextEditConfig, ButtonEditConfig } from '../types';
 
 interface CTABlockProps {
   block: ComponentBlock;
   onUpdate: (content: Record<string, string>) => void;
   isPreview?: boolean;
-  onEditButton?: (buttonId: string, config: any) => void;
+  onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
+  onEditText?: (textId: string, config: TextEditConfig) => void;
 }
 
-export const CTABlock = ({ block, onUpdate, isPreview, onEditButton }: CTABlockProps) => {
+export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText }: CTABlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -108,6 +110,8 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton }: CTABlockP
           color={content.headlineColor}
           onColorChange={(c) => updateField('headlineColor', c)}
           className="text-4xl font-bold mb-4"
+          onEditText={onEditText}
+          textId={`${block.id}-headline`}
         />
         <EditableText
           as="p"
@@ -116,6 +120,9 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton }: CTABlockP
           color={content.descriptionColor || '#cffafe'}
           onColorChange={(c) => updateField('descriptionColor', c)}
           className="text-xl mb-8 block"
+          onEditText={onEditText}
+          textId={`${block.id}-description`}
+          isMultiline
         />
         <EditableButton
           text={buttonConfig.text}
@@ -134,6 +141,8 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton }: CTABlockP
           color={content.noteColor || '#a5f3fc'}
           onColorChange={(c) => updateField('noteColor', c)}
           className="mt-4 text-sm block"
+          onEditText={onEditText}
+          textId={`${block.id}-note`}
         />
       </div>
     </section>

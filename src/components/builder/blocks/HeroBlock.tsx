@@ -1,24 +1,17 @@
 import { ComponentBlock } from '@/types/builder';
 import { EditableText } from '../EditableText';
 import { EditableButton } from '../EditableButton';
+import { TextEditConfig, ButtonEditConfig } from '../types';
 
 interface HeroBlockProps {
   block: ComponentBlock;
   onUpdate: (content: Record<string, string>) => void;
   isPreview?: boolean;
-  onEditButton?: (buttonId: string, config: {
-    text: string;
-    bgColor: string;
-    textColor: string;
-    paddingX: number;
-    paddingY: number;
-    borderRadius: number;
-    link: string;
-    openInNewTab: boolean;
-  }) => void;
+  onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
+  onEditText?: (textId: string, config: TextEditConfig) => void;
 }
 
-export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton }: HeroBlockProps) => {
+export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText }: HeroBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -60,7 +53,7 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton }: HeroBloc
         onBorderRadiusChange: (v: number) => updateField('buttonBorderRadius', v.toString()),
         onLinkChange: (v: string) => updateField('buttonLink', v),
         onOpenInNewTabChange: (v: boolean) => updateField('buttonOpenInNewTab', v.toString()),
-      } as any);
+      });
     }
   };
 
@@ -83,7 +76,7 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton }: HeroBloc
         onBorderRadiusChange: (v: number) => updateField('secondaryButtonBorderRadius', v.toString()),
         onLinkChange: (v: string) => updateField('secondaryButtonLink', v),
         onOpenInNewTabChange: (v: boolean) => updateField('secondaryButtonOpenInNewTab', v.toString()),
-      } as any);
+      });
     }
   };
 
@@ -154,6 +147,8 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton }: HeroBloc
           color={content.headlineColor}
           onColorChange={(c) => updateField('headlineColor', c)}
           className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
+          onEditText={onEditText}
+          textId={`${block.id}-headline`}
         />
         <EditableText
           as="p"
@@ -162,6 +157,9 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton }: HeroBloc
           color={content.subheadlineColor || '#cbd5e1'}
           onColorChange={(c) => updateField('subheadlineColor', c)}
           className="text-xl mb-10 max-w-2xl mx-auto block"
+          onEditText={onEditText}
+          textId={`${block.id}-subheadline`}
+          isMultiline
         />
         <div className="flex gap-4 justify-center flex-wrap">
           <EditableButton

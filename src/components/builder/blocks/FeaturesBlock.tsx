@@ -1,14 +1,16 @@
 import { ComponentBlock } from '@/types/builder';
 import { EditableText } from '../EditableText';
+import { TextEditConfig } from '../types';
 import { Zap, Smartphone, MousePointer } from 'lucide-react';
 
 interface FeaturesBlockProps {
   block: ComponentBlock;
   onUpdate: (content: Record<string, string>) => void;
   isPreview?: boolean;
+  onEditText?: (textId: string, config: TextEditConfig) => void;
 }
 
-export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps) => {
+export const FeaturesBlock = ({ block, onUpdate, isPreview, onEditText }: FeaturesBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -51,6 +53,8 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
             color={content[titleColorKey] || '#0f172a'}
             onColorChange={(c) => updateField(titleColorKey, c)}
             className="text-lg font-semibold mb-2"
+            onEditText={onEditText}
+            textId={`${block.id}-${titleKey}`}
           />
           <EditableText
             as="p"
@@ -59,6 +63,9 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
             color={content[descColorKey] || '#475569'}
             onColorChange={(c) => updateField(descColorKey, c)}
             className="block"
+            onEditText={onEditText}
+            textId={`${block.id}-${descKey}`}
+            isMultiline
           />
         </>
       )}
@@ -93,6 +100,8 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
                 color={content.titleColor || '#0f172a'}
                 onColorChange={(c) => updateField('titleColor', c)}
                 className="text-3xl font-bold mb-4"
+                onEditText={onEditText}
+                textId={`${block.id}-title`}
               />
               <EditableText
                 as="p"
@@ -101,6 +110,9 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
                 color={content.subtitleColor || '#475569'}
                 onColorChange={(c) => updateField('subtitleColor', c)}
                 className="text-lg max-w-2xl mx-auto block"
+                onEditText={onEditText}
+                textId={`${block.id}-subtitle`}
+                isMultiline
               />
             </>
           )}

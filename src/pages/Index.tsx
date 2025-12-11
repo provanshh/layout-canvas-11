@@ -11,7 +11,7 @@ import {
   DragEndEvent,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { ComponentBlock, ComponentTemplate } from '@/types/builder';
+import { ComponentBlock, ComponentTemplate, BlockStyles } from '@/types/builder';
 import { componentTemplates } from '@/data/componentTemplates';
 import { ComponentSidebar } from '@/components/builder/ComponentSidebar';
 import { BuilderCanvas } from '@/components/builder/BuilderCanvas';
@@ -78,6 +78,12 @@ const Index = () => {
           id: generateId(),
           type: template.type,
           content: { ...template.defaultContent },
+          styles: {
+            paddingTop: '48',
+            paddingBottom: '48',
+            marginTop: '0',
+            marginBottom: '0',
+          },
         };
 
         // If dropped over an existing block, insert at that position
@@ -120,6 +126,18 @@ const Index = () => {
     [blocks, setBlocks]
   );
 
+  const handleUpdateBlockStyles = useCallback(
+    (id: string, styles: BlockStyles) => {
+      setBlocks(
+        blocks.map((block) =>
+          block.id === id ? { ...block, styles } : block
+        ),
+        true
+      );
+    },
+    [blocks, setBlocks]
+  );
+
   const handleDeleteBlock = useCallback(
     (id: string) => {
       setBlocks(blocks.filter((block) => block.id !== id));
@@ -139,6 +157,7 @@ const Index = () => {
     setShowStylePanel(true);
     setSelectedBlockId(id);
     closeAllPanels();
+    setShowStylePanel(true);
   };
 
   const handleTogglePreviewTheme = () => {
@@ -264,7 +283,7 @@ const Index = () => {
         {showStylePanel && (
           <StylePanel
             block={selectedBlock}
-            onUpdateStyles={handleUpdateBlock}
+            onUpdateStyles={handleUpdateBlockStyles}
             onClose={() => {
               setShowStylePanel(false);
               setStylePanelBlockId(null);

@@ -96,15 +96,12 @@ const DraggableItem = ({ template, isCollapsed }: DraggableItemProps) => {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-100 hover:bg-secondary/50 cursor-grab active:cursor-grabbing group ${isDragging ? 'opacity-50 scale-105' : ''}`}
+      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-100 hover:bg-secondary/50 cursor-grab active:cursor-grabbing group ${isDragging ? 'opacity-50 scale-105' : ''}`}
     >
-      <div className={`w-10 h-10 rounded-lg ${colors.bg} flex items-center justify-center flex-shrink-0`}>
-        <Icon className={`w-5 h-5 ${colors.icon}`} />
+      <div className={`w-9 h-9 rounded-lg ${colors.bg} flex items-center justify-center flex-shrink-0`}>
+        <Icon className={`w-4 h-4 ${colors.icon}`} />
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-medium text-sm text-foreground truncate">{template.label}</p>
-        <p className="text-xs text-muted-foreground truncate">{template.description}</p>
-      </div>
+      <p className="font-medium text-sm text-foreground truncate">{template.label}</p>
     </div>
   );
 };
@@ -116,7 +113,7 @@ interface ComponentSidebarProps {
 
 export const ComponentSidebar = ({ isCollapsed, onToggleCollapse }: ComponentSidebarProps) => {
   return (
-    <aside className={`${isCollapsed ? 'w-[72px]' : 'w-[260px]'} bg-card border-r border-border flex flex-col h-full transition-all duration-200`}>
+    <aside className={`${isCollapsed ? 'w-[60px]' : 'w-[200px]'} bg-card border-r border-border flex flex-col h-full transition-all duration-200`}>
       <div className="p-3 border-b border-border flex items-center justify-between">
         {!isCollapsed && (
           <span className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">Components</span>

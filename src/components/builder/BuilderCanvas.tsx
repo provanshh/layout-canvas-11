@@ -5,10 +5,10 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ComponentBlock } from '@/types/builder';
+import { ComponentBlock, BlockStyles } from '@/types/builder';
 import { BlockRenderer } from './BlockRenderer';
 import { ButtonEditConfig, TextEditConfig, ImageEditConfig } from './types';
-import { Trash2, GripVertical, Paintbrush, ArrowUpDown } from 'lucide-react';
+import { Trash2, GripVertical, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SortableBlockProps {
@@ -24,6 +24,45 @@ interface SortableBlockProps {
   onEditText: (textId: string, config: TextEditConfig) => void;
   onEditImage: (imageId: string, config: ImageEditConfig) => void;
 }
+
+const getBlockStyles = (styles?: BlockStyles): React.CSSProperties => {
+  if (!styles) return {};
+  
+  const css: React.CSSProperties = {};
+  
+  // Spacing
+  if (styles.paddingTop) css.paddingTop = `${styles.paddingTop}px`;
+  if (styles.paddingBottom) css.paddingBottom = `${styles.paddingBottom}px`;
+  if (styles.marginTop) css.marginTop = `${styles.marginTop}px`;
+  if (styles.marginBottom) css.marginBottom = `${styles.marginBottom}px`;
+  
+  // Background
+  if (styles.backgroundGradient) {
+    css.background = styles.backgroundGradient;
+  } else if (styles.backgroundColor) {
+    css.backgroundColor = styles.backgroundColor;
+  }
+  
+  // Background image
+  if (styles.backgroundImage) {
+    css.backgroundImage = `url(${styles.backgroundImage})`;
+    css.backgroundSize = 'cover';
+    css.backgroundPosition = styles.backgroundPosition || 'center';
+    css.backgroundRepeat = styles.backgroundRepeat || 'no-repeat';
+    if (styles.backgroundOpacity && parseInt(styles.backgroundOpacity) < 100) {
+      css.position = 'relative';
+    }
+  }
+  
+  // Typography
+  if (styles.textColor) css.color = styles.textColor;
+  if (styles.fontFamily) css.fontFamily = styles.fontFamily;
+  if (styles.fontScale) {
+    css.fontSize = `${parseInt(styles.fontScale)}%`;
+  }
+  
+  return css;
+};
 
 const SortableBlock = ({ 
   block, 
@@ -45,6 +84,7 @@ const SortableBlock = ({
     transform,
     transition,
     isDragging,
+    isOver,
   } = useSortable({ id: block.id });
 
   const style = {
@@ -52,56 +92,95 @@ const SortableBlock = ({
     transition,
   };
 
+  const blockStyles = getBlockStyles(block.styles);
+
   return (
-    <motion.div
+    <motion.section
       ref={setNodeRef}
       style={style}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className={`component-block relative group ${isDragging ? 'z-50 opacity-80' : ''} ${
-        isSelected ? 'component-block-selected' : ''
-      }`}
-      onClick={onSelect}
+      data-block-id={block.id}
+      data-block-type={block.type}
+      className={`builder-block relative group ${isDragging ? 'z-50 opacity-70 scale-[1.02]' : ''} ${
+        isSelected ? 'ring-2 ring-primary ring-offset-2' : ''
+      } ${isOver ? 'ring-2 ring-cyan-500 ring-offset-1' : ''}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect();
+      }}
     >
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full pr-1.5 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-0.5">
+      {/* Block Controls */}
+      <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full pr-2 flex flex-col gap-1 transition-opacity ${
+        isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+      }`}>
         <button
           {...attributes}
           {...listeners}
-          className="p-1.5 bg-secondary rounded hover:bg-muted transition-colors cursor-grab active:cursor-grabbing"
+          className="p-1.5 bg-card border border-border rounded-md hover:bg-secondary transition-colors cursor-grab active:cursor-grabbing shadow-sm"
+          title="Drag to reorder"
         >
-          <GripVertical className="w-3 h-3 text-muted-foreground" />
+          <GripVertical className="w-3.5 h-3.5 text-muted-foreground" />
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
             onOpenStylePanel();
           }}
-          className="p-1.5 bg-secondary rounded hover:bg-primary/20 transition-colors"
-          title="Style"
+          className="p-1.5 bg-card border border-border rounded-md hover:bg-primary/10 hover:border-primary/50 transition-colors shadow-sm"
+          title="Block Settings"
         >
-          <Paintbrush className="w-3 h-3 text-primary" />
+          <Settings className="w-3.5 h-3.5 text-primary" />
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
             onDelete(block.id);
           }}
-          className="p-1.5 bg-destructive/10 rounded hover:bg-destructive/20 transition-colors"
+          className="p-1.5 bg-card border border-destructive/30 rounded-md hover:bg-destructive/10 hover:border-destructive transition-colors shadow-sm"
+          title="Delete block"
         >
-          <Trash2 className="w-3 h-3 text-destructive" />
+          <Trash2 className="w-3.5 h-3.5 text-destructive" />
         </button>
       </div>
-      <BlockRenderer
-        block={block}
-        onUpdate={(content) => onUpdate(block.id, content)}
-        isDarkTheme={isDarkTheme}
-        onToggleTheme={onToggleTheme}
-        onEditButton={onEditButton}
-        onEditText={onEditText}
-        onEditImage={onEditImage}
-      />
-    </motion.div>
+
+      {/* Block Content with Applied Styles */}
+      <div 
+        className="block-content"
+        style={blockStyles}
+      >
+        {/* Background image overlay for opacity control */}
+        {block.styles?.backgroundImage && block.styles?.backgroundOpacity && parseInt(block.styles.backgroundOpacity) < 100 && (
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `url(${block.styles.backgroundImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: block.styles.backgroundPosition || 'center',
+              backgroundRepeat: block.styles.backgroundRepeat || 'no-repeat',
+              opacity: parseInt(block.styles.backgroundOpacity) / 100,
+            }}
+          />
+        )}
+        <BlockRenderer
+          block={block}
+          onUpdate={(content) => onUpdate(block.id, content)}
+          isDarkTheme={isDarkTheme}
+          onToggleTheme={onToggleTheme}
+          onEditButton={onEditButton}
+          onEditText={onEditText}
+          onEditImage={onEditImage}
+        />
+      </div>
+
+      {/* Selection indicator */}
+      {isSelected && (
+        <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] px-1.5 py-0.5 rounded font-medium">
+          {block.type}
+        </div>
+      )}
+    </motion.section>
   );
 };
 
@@ -139,30 +218,30 @@ export const BuilderCanvas = ({
   return (
     <div
       ref={setNodeRef}
-      className={`flex-1 overflow-auto bg-muted/20 p-6`}
+      className={`flex-1 overflow-auto bg-muted/30 p-6`}
       onClick={() => onSelectBlock(null)}
     >
       <div className="max-w-4xl mx-auto">
         <div
-          className={`canvas-dropzone overflow-hidden ${isDarkTheme ? 'bg-slate-900' : 'bg-canvas'} ${
-            isOver ? 'canvas-dropzone-active' : ''
-          } ${blocks.length === 0 ? 'flex items-center justify-center min-h-[400px]' : 'border-0'}`}
+          className={`canvas-dropzone overflow-hidden ${isDarkTheme ? 'bg-slate-900' : 'bg-white'} rounded-lg shadow-sm ${
+            isOver ? 'ring-2 ring-primary ring-offset-2' : ''
+          } ${blocks.length === 0 ? 'flex items-center justify-center min-h-[500px] border-2 border-dashed border-border' : ''}`}
         >
           {blocks.length === 0 ? (
             <div className="text-center p-10">
-              <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-secondary rounded-xl flex items-center justify-center mx-auto mb-4">
                 <motion.div
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                 >
-                  <ArrowUpDown className="w-6 h-6 text-muted-foreground" />
+                  <GripVertical className="w-8 h-8 text-muted-foreground" />
                 </motion.div>
               </div>
-              <h3 className="text-base font-medium text-foreground mb-1.5">
+              <h3 className="text-lg font-medium text-foreground mb-2">
                 Drop components here
               </h3>
-              <p className="text-sm text-muted-foreground max-w-[220px] mx-auto">
-                Drag from the sidebar or choose a template to start
+              <p className="text-sm text-muted-foreground max-w-[280px] mx-auto">
+                Drag components from the sidebar to build your page
               </p>
             </div>
           ) : (

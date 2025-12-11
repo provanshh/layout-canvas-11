@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
-import { TextEditPopover } from './TextEditPopover';
+import { TextEditConfig } from './types';
 
 interface EditableTextProps {
   value: string;
@@ -18,6 +17,9 @@ interface EditableTextProps {
   enableFontStyle?: boolean;
   fontStyle?: string;
   onFontStyleChange?: (style: string) => void;
+  onEditText?: (textId: string, config: TextEditConfig) => void;
+  textId?: string;
+  isMultiline?: boolean;
 }
 
 export const EditableText = ({ 
@@ -37,61 +39,39 @@ export const EditableText = ({
   enableFontStyle = true,
   fontStyle,
   onFontStyleChange,
+  onEditText,
+  textId,
+  isMultiline = false,
 }: EditableTextProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [editValue, setEditValue] = useState(value);
-  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [isEditing]);
-
-  useEffect(() => {
-    setEditValue(value);
-  }, [value]);
-
-  const handleBlur = () => {
-    setIsEditing(false);
-    if (editValue !== value) {
-      onChange(editValue);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleBlur();
-    }
-    if (e.key === 'Escape') {
-      setEditValue(value);
-      setIsEditing(false);
-    }
-  };
-
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsPopoverOpen(true);
-  };
-
-  const handleClick = () => {
-    if (!isPopoverOpen) {
-      setIsEditing(true);
-    }
-  };
-
   // Build inline styles based on props
   const getInlineStyles = (): React.CSSProperties => {
     const styles: React.CSSProperties = {};
     if (color) styles.color = color;
-    if (fontStyle === 'bold') styles.fontWeight = 'bold';
-    if (fontStyle === 'italic') styles.fontStyle = 'italic';
-    if (fontStyle === 'underline') styles.textDecoration = 'underline';
+    if (fontStyle?.includes('bold')) styles.fontWeight = 'bold';
+    if (fontStyle?.includes('italic')) styles.fontStyle = 'italic';
+    if (fontStyle?.includes('underline')) styles.textDecoration = 'underline';
     return styles;
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (onEditText && textId) {
+      const config: TextEditConfig = {
+        text: value,
+        onTextChange: onChange,
+        color: color || '',
+        onColorChange: onColorChange || (() => {}),
+        link: link || '',
+        onLinkChange: (newLink: string) => onLinkChange?.(newLink, openInNewTab),
+        openInNewTab: openInNewTab,
+        onOpenInNewTabChange: (newTab: boolean) => onLinkChange?.(link || '', newTab),
+        fontStyle: fontStyle || '',
+        onFontStyleChange: onFontStyleChange || (() => {}),
+        isMultiline,
+      };
+      onEditText(textId, config);
+    }
   };
 
   // In preview mode, just render the text without editing capability
@@ -118,49 +98,14 @@ export const EditableText = ({
     return content;
   }
 
-  if (isEditing && !isPopoverOpen) {
-    return (
-      <Component className={className} style={{ ...getInlineStyles(), position: 'relative' }}>
-        <input
-          ref={inputRef as React.RefObject<HTMLInputElement>}
-          type="text"
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          className="editable-text absolute inset-0 w-full h-full bg-transparent border-none outline-none"
-          style={{ ...getInlineStyles(), font: 'inherit', padding: 0, margin: 0 }}
-        />
-        <span className="invisible">{editValue || ' '}</span>
-      </Component>
-    );
-  }
-
   return (
-    <TextEditPopover
-      value={value}
-      onChange={onChange}
-      onRemove={onRemove}
-      link={link}
-      onLinkChange={enableLink ? onLinkChange : undefined}
-      openInNewTab={openInNewTab}
-      color={color}
-      onColorChange={enableColor ? onColorChange : undefined}
-      fontStyle={fontStyle}
-      onFontStyleChange={enableFontStyle ? onFontStyleChange : undefined}
-      isOpen={isPopoverOpen}
-      onOpenChange={setIsPopoverOpen}
-      isPreview={isPreview}
+    <Component
+      onClick={handleClick}
+      className={`cursor-pointer hover:bg-primary/10 hover:outline hover:outline-2 hover:outline-primary/30 rounded px-1 -mx-1 transition-all ${className}`}
+      style={getInlineStyles()}
+      title="Click to edit"
     >
-      <Component
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-        className={`cursor-text hover:bg-primary/10 rounded px-1 -mx-1 transition-colors ${className}`}
-        style={getInlineStyles()}
-        title="Click to edit, double-click for more options"
-      >
-        {value}
-      </Component>
-    </TextEditPopover>
+      {value}
+    </Component>
   );
 };
