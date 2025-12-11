@@ -21,9 +21,10 @@ interface BlockRendererProps {
   onUpdate: (content: Record<string, string>) => void;
   isPreview?: boolean;
   isDarkTheme?: boolean;
+  onToggleTheme?: () => void;
 }
 
-export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme }: BlockRendererProps) => {
+export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme, onToggleTheme }: BlockRendererProps) => {
   const blockComponents = {
     navbar: NavbarBlock,
     themeToggle: ThemeToggleBlock,
@@ -65,7 +66,13 @@ export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme }: Block
 
   return (
     <div style={customStyles} className={spacingClass}>
-      <Component block={block} onUpdate={onUpdate} isPreview={isPreview} isDarkTheme={isDarkTheme} />
+      <Component 
+        block={block} 
+        onUpdate={onUpdate} 
+        isPreview={isPreview} 
+        isDarkTheme={isDarkTheme}
+        onToggleTheme={onToggleTheme}
+      />
     </div>
   );
 };

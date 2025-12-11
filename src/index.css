@@ -2,84 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    /* Editor dark theme */
-    --background: 240 10% 8%;
-    --foreground: 210 20% 98%;
+    /* Apple-inspired light theme for editor */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 9%;
 
-    --card: 240 10% 10%;
-    --card-foreground: 210 20% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
 
-    --popover: 240 10% 10%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
 
-    --primary: 185 80% 50%;
-    --primary-foreground: 240 10% 8%;
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 8% 15%;
-    --secondary-foreground: 210 20% 90%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
 
-    --muted: 240 8% 18%;
-    --muted-foreground: 215 15% 55%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 185 80% 50%;
-    --accent-foreground: 240 10% 8%;
+    --accent: 211 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 8% 20%;
-    --input: 240 8% 20%;
-    --ring: 185 80% 50%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 211 100% 50%;
 
     --radius: 0.5rem;
 
     /* Custom tokens */
     --canvas-bg: 0 0% 100%;
-    --sidebar-width: 280px;
-    --toolbar-height: 56px;
-    
-    --glow-primary: 0 0 20px hsl(185 80% 50% / 0.3);
-    --glow-hover: 0 0 30px hsl(185 80% 50% / 0.4);
-    
-    /* Gradient definitions */
-    --gradient-primary: linear-gradient(135deg, hsl(185 80% 50%) 0%, hsl(200 80% 45%) 100%);
-    --gradient-surface: linear-gradient(180deg, hsl(240 10% 12%) 0%, hsl(240 10% 8%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(240 10% 14%) 0%, hsl(240 10% 10%) 100%);
+    --sidebar-width: 260px;
+    --toolbar-height: 48px;
 
-    --sidebar-background: 240 10% 6%;
-    --sidebar-foreground: 210 20% 90%;
-    --sidebar-primary: 185 80% 50%;
-    --sidebar-primary-foreground: 240 10% 8%;
-    --sidebar-accent: 240 8% 15%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 240 8% 18%;
-    --sidebar-ring: 185 80% 50%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 9%;
+    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 94%;
+    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 211 100% 50%;
   }
 
   .dark {
-    --background: 240 10% 8%;
-    --foreground: 210 20% 98%;
-    --card: 240 10% 10%;
-    --card-foreground: 210 20% 98%;
-    --popover: 240 10% 10%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 185 80% 50%;
-    --primary-foreground: 240 10% 8%;
-    --secondary: 240 8% 15%;
-    --secondary-foreground: 210 20% 90%;
-    --muted: 240 8% 18%;
-    --muted-foreground: 215 15% 55%;
-    --accent: 185 80% 50%;
-    --accent-foreground: 240 10% 8%;
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 240 8% 20%;
-    --input: 240 8% 20%;
-    --ring: 185 80% 50%;
+    --background: 0 0% 9%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 55%;
+
+    --accent: 211 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 211 100% 50%;
+
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 211 100% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 211 100% 50%;
   }
 }
 
@@ -89,93 +98,118 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  code, .font-mono {
-    font-family: 'JetBrains Mono', monospace;
+  /* Minimalist Apple-style scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 100px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
   }
 }
 
 @layer components {
   .sidebar-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200;
+    @apply flex items-center gap-2.5 px-2.5 py-2 rounded-md transition-all duration-150;
     @apply hover:bg-secondary text-muted-foreground hover:text-foreground;
-    @apply cursor-grab active:cursor-grabbing;
+    @apply cursor-grab active:cursor-grabbing text-[13px];
   }
 
   .sidebar-item-active {
-    @apply bg-secondary text-foreground shadow-sm;
+    @apply bg-secondary text-foreground;
   }
 
   .canvas-dropzone {
-    @apply min-h-[400px] rounded-xl border-2 border-dashed border-border;
-    @apply transition-all duration-300;
+    @apply min-h-[400px] rounded-lg border border-border/50;
+    @apply transition-all duration-200;
   }
 
   .canvas-dropzone-active {
-    @apply border-primary bg-primary/5;
-    box-shadow: var(--glow-primary);
+    @apply border-primary/50 bg-primary/5;
   }
 
   .component-block {
-    @apply relative rounded-lg border border-transparent;
-    @apply transition-all duration-200;
+    @apply relative rounded-md border border-transparent;
+    @apply transition-all duration-150;
   }
 
   .component-block:hover {
-    @apply border-primary/50;
+    @apply border-primary/40;
   }
 
   .component-block-selected {
-    @apply border-primary ring-2 ring-primary/20;
+    @apply border-primary ring-1 ring-primary/20;
   }
 
   .editable-text {
-    @apply outline-none focus:ring-2 focus:ring-primary/30 focus:bg-primary/5;
-    @apply rounded px-1 -mx-1 transition-all duration-200;
+    @apply outline-none focus:ring-1 focus:ring-primary/30 focus:bg-primary/5;
+    @apply rounded px-0.5 -mx-0.5 transition-all duration-150;
   }
 
   .toolbar-button {
-    @apply flex items-center justify-center w-9 h-9 rounded-lg;
-    @apply bg-secondary text-muted-foreground;
-    @apply hover:bg-muted hover:text-foreground;
-    @apply transition-all duration-200;
+    @apply flex items-center justify-center w-7 h-7 rounded-md;
+    @apply bg-transparent text-muted-foreground;
+    @apply hover:bg-secondary hover:text-foreground;
+    @apply transition-all duration-150;
   }
 
   .toolbar-button-active {
     @apply bg-primary text-primary-foreground;
   }
 
-  .export-button {
-    @apply px-4 py-2 rounded-lg font-medium text-sm;
-    @apply bg-gradient-to-r from-primary to-accent text-primary-foreground;
-    @apply hover:opacity-90 transition-all duration-200;
-    @apply shadow-lg;
-    box-shadow: var(--glow-primary);
-  }
-
   /* Mac-style minimalist buttons */
   .mac-button {
-    @apply flex items-center justify-center w-7 h-7 rounded-md;
+    @apply flex items-center justify-center w-6 h-6 rounded;
     @apply text-muted-foreground bg-transparent;
-    @apply hover:bg-muted/60 hover:text-foreground;
-    @apply transition-all duration-150 ease-out;
+    @apply hover:bg-secondary hover:text-foreground;
+    @apply transition-all duration-100 ease-out;
   }
 
   .mac-button-text {
-    @apply flex items-center gap-1.5 px-2.5 h-7 rounded-md;
-    @apply text-xs font-medium text-muted-foreground bg-transparent;
-    @apply hover:bg-muted/60 hover:text-foreground;
-    @apply transition-all duration-150 ease-out;
+    @apply flex items-center gap-1 px-2 h-6 rounded;
+    @apply text-[11px] font-medium text-muted-foreground bg-transparent;
+    @apply hover:bg-secondary hover:text-foreground;
+    @apply transition-all duration-100 ease-out;
   }
 
   .mac-button-primary {
-    @apply flex items-center gap-1.5 px-3 h-7 rounded-md;
-    @apply text-xs font-medium;
-    @apply bg-primary/90 text-primary-foreground;
-    @apply hover:bg-primary transition-all duration-150 ease-out;
+    @apply flex items-center gap-1 px-2.5 h-6 rounded;
+    @apply text-[11px] font-medium;
+    @apply bg-primary text-primary-foreground;
+    @apply hover:bg-primary/90 transition-all duration-100 ease-out;
+  }
+
+  .mac-button-secondary {
+    @apply flex items-center gap-1 px-2.5 h-6 rounded;
+    @apply text-[11px] font-medium;
+    @apply bg-secondary text-secondary-foreground border border-border/50;
+    @apply hover:bg-muted transition-all duration-100 ease-out;
   }
 
   .preview-section {
@@ -190,22 +224,6 @@
 
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: var(--gradient-primary);
-  }
-
-  .bg-gradient-surface {
-    background-image: var(--gradient-surface);
-  }
-
-  .bg-gradient-card {
-    background-image: var(--gradient-card);
-  }
-
-  .glow-primary {
-    box-shadow: var(--glow-primary);
-  }
-
-  .glow-hover:hover {
-    box-shadow: var(--glow-hover);
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
   }
 }
