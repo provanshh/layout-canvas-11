@@ -93,7 +93,7 @@ export const BuilderCanvas = ({
   return (
     <div
       ref={setNodeRef}
-      className={`flex-1 overflow-auto bg-muted/30 p-8`}
+      className={`flex-1 min-w-[800px] overflow-auto bg-muted/30 p-8`}
       onClick={() => onSelectBlock(null)}
     >
       <div className="max-w-5xl mx-auto">
