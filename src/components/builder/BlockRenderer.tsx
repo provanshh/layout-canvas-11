@@ -6,6 +6,8 @@ import { CTABlock } from './blocks/CTABlock';
 import { ContactBlock } from './blocks/ContactBlock';
 import { PricingBlock } from './blocks/PricingBlock';
 import { FAQBlock } from './blocks/FAQBlock';
+import { NavbarBlock } from './blocks/NavbarBlock';
+import { ThemeToggleBlock } from './blocks/ThemeToggleBlock';
 
 interface BlockRendererProps {
   block: ComponentBlock;
@@ -15,6 +17,8 @@ interface BlockRendererProps {
 
 export const BlockRenderer = ({ block, onUpdate, isPreview }: BlockRendererProps) => {
   const blockComponents = {
+    navbar: NavbarBlock,
+    themeToggle: ThemeToggleBlock,
     hero: HeroBlock,
     features: FeaturesBlock,
     testimonials: TestimonialsBlock,

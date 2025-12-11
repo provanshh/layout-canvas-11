@@ -2,6 +2,33 @@ import { ComponentTemplate } from '@/types/builder';
 
 export const componentTemplates: ComponentTemplate[] = [
   {
+    type: 'navbar',
+    label: 'Navigation Bar',
+    icon: 'Menu',
+    description: 'Customizable navigation with editable links',
+    defaultContent: {
+      logoText: 'Brand',
+      navLink1Label: 'Home',
+      navLink1Href: '#',
+      navLink2Label: 'Features',
+      navLink2Href: '#features',
+      navLink3Label: 'Pricing',
+      navLink3Href: '#pricing',
+      navLink4Label: 'Contact',
+      navLink4Href: '#contact',
+      ctaText: 'Get Started',
+    },
+  },
+  {
+    type: 'themeToggle',
+    label: 'Theme Toggle',
+    icon: 'SunMoon',
+    description: 'Light/dark mode toggle button',
+    defaultContent: {
+      label: 'Toggle Theme',
+    },
+  },
+  {
     type: 'hero',
     label: 'Hero Section',
     icon: 'Sparkles',

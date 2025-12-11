@@ -1,4 +1,6 @@
 export type ComponentType = 
+  | 'navbar'
+  | 'themeToggle'
   | 'hero'
   | 'features'
   | 'testimonials'

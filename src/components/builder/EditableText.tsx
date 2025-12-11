@@ -5,13 +5,15 @@ interface EditableTextProps {
   onChange: (value: string) => void;
   className?: string;
   as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
+  isPreview?: boolean;
 }
 
 export const EditableText = ({ 
   value, 
   onChange, 
   className = '', 
-  as: Component = 'span' 
+  as: Component = 'span',
+  isPreview = false,
 }: EditableTextProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
@@ -45,6 +47,15 @@ export const EditableText = ({
       setIsEditing(false);
     }
   };
+
+  // In preview mode, just render the text without editing capability
+  if (isPreview) {
+    return (
+      <Component className={className}>
+        {value}
+      </Component>
+    );
+  }
 
   if (isEditing) {
     return (

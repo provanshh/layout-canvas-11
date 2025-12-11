@@ -9,7 +9,9 @@ import {
   Mail, 
   CreditCard, 
   HelpCircle,
-  GripVertical
+  GripVertical,
+  Menu,
+  SunMoon
 } from 'lucide-react';
 
 const iconMap: Record<string, React.ElementType> = {
@@ -20,6 +22,8 @@ const iconMap: Record<string, React.ElementType> = {
   Mail,
   CreditCard,
   HelpCircle,
+  Menu,
+  SunMoon,
 };
 
 interface DraggableItemProps {

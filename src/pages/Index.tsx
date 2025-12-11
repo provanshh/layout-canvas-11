@@ -124,13 +124,16 @@ const Index = () => {
           onDragEnd={handleDragEnd}
         >
           <ComponentSidebar />
-          <BuilderCanvas
-            blocks={blocks}
-            onUpdateBlock={handleUpdateBlock}
-            onDeleteBlock={handleDeleteBlock}
-            selectedBlockId={selectedBlockId}
-            onSelectBlock={setSelectedBlockId}
-          />
+          <div className="w-1 bg-border hover:bg-primary/50 cursor-col-resize transition-colors flex-shrink-0" />
+          <div className="flex-1 overflow-x-auto overflow-y-hidden">
+            <BuilderCanvas
+              blocks={blocks}
+              onUpdateBlock={handleUpdateBlock}
+              onDeleteBlock={handleDeleteBlock}
+              selectedBlockId={selectedBlockId}
+              onSelectBlock={setSelectedBlockId}
+            />
+          </div>
           <DragOverlay>
             {activeId && activeId.startsWith('template-') && (
               <div className="p-4 bg-card border border-primary rounded-lg shadow-lg opacity-80">
