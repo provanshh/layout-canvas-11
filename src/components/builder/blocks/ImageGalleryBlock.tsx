@@ -1,17 +1,16 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
-import { Image, Plus, X } from 'lucide-react';
-import { useState } from 'react';
+import { EditableImage } from '../EditableImage';
+import { Plus, X } from 'lucide-react';
 
-interface ImageGalleryBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-}
-
-export const ImageGalleryBlock = ({ block, onUpdate, isPreview }: ImageGalleryBlockProps) => {
+export const ImageGalleryBlock = ({ 
+  block, 
+  onUpdate, 
+  isPreview,
+  onEditText,
+  onEditImage 
+}: BaseBlockProps) => {
   const { content } = block;
-  const [editingImage, setEditingImage] = useState<number | null>(null);
 
   const handleUpdateField = (field: string, value: string) => {
     onUpdate({ ...content, [field]: value });
@@ -43,7 +42,6 @@ export const ImageGalleryBlock = ({ block, onUpdate, isPreview }: ImageGalleryBl
     delete newContent[`image${index}Url`];
     delete newContent[`image${index}Caption`];
     
-    // Shift remaining images
     for (let i = index + 1; i <= 6; i++) {
       if (newContent[`image${i}Url`]) {
         newContent[`image${i - 1}Url`] = newContent[`image${i}Url`];
@@ -63,20 +61,26 @@ export const ImageGalleryBlock = ({ block, onUpdate, isPreview }: ImageGalleryBl
   ];
 
   return (
-    <section className="bg-white py-16 px-8">
+    <div className="bg-white py-16 px-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <EditableText
+            as="h2"
             value={content.title || 'Our Gallery'}
             onChange={(val) => handleUpdateField('title', val)}
             className="text-3xl font-bold text-slate-900 mb-4"
             isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-title`}
           />
           <EditableText
+            as="p"
             value={content.subtitle || 'A collection of our finest work and moments'}
             onChange={(val) => handleUpdateField('subtitle', val)}
             className="text-lg text-slate-600"
             isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-subtitle`}
           />
         </div>
 
@@ -89,28 +93,30 @@ export const ImageGalleryBlock = ({ block, onUpdate, isPreview }: ImageGalleryBl
             return (
               <div key={i} className="group relative">
                 <div className="relative overflow-hidden rounded-xl aspect-[4/3] bg-slate-100">
-                  <img
+                  <EditableImage
                     src={imageUrl}
                     alt={caption}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    isPreview={isPreview}
+                    borderRadius={12}
+                    onClick={() => {
+                      if (!isPreview && onEditImage) {
+                        onEditImage(`${block.id}-image${i}`, {
+                          imageUrl: imageUrl,
+                          alt: caption,
+                          onImageUrlChange: (v) => handleUpdateField(`image${i}Url`, v),
+                          onAltChange: (v) => handleUpdateField(`image${i}Caption`, v),
+                        });
+                      }
+                    }}
                   />
-                  {!isPreview && (
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => setEditingImage(i)}
-                        className="p-2 bg-white rounded-lg hover:bg-slate-100 transition-colors"
-                      >
-                        <Image className="w-5 h-5 text-slate-700" />
-                      </button>
-                      {imageCount > 1 && (
-                        <button
-                          onClick={() => removeImage(i)}
-                          className="p-2 bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
-                        >
-                          <X className="w-5 h-5 text-white" />
-                        </button>
-                      )}
-                    </div>
+                  {!isPreview && imageCount > 1 && (
+                    <button
+                      onClick={() => removeImage(i)}
+                      className="absolute top-2 right-2 p-1.5 bg-red-500 rounded-lg hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                    >
+                      <X className="w-4 h-4 text-white" />
+                    </button>
                   )}
                 </div>
                 <div className="mt-3">
@@ -119,33 +125,10 @@ export const ImageGalleryBlock = ({ block, onUpdate, isPreview }: ImageGalleryBl
                     onChange={(val) => handleUpdateField(`image${i}Caption`, val)}
                     className="text-slate-700 font-medium"
                     isPreview={isPreview}
+                    onEditText={onEditText}
+                    textId={`${block.id}-image${i}Caption`}
                   />
                 </div>
-
-                {editingImage === i && !isPreview && (
-                  <div className="absolute inset-0 bg-white rounded-xl shadow-xl p-4 z-10">
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="font-medium text-slate-900">Edit Image</span>
-                      <button onClick={() => setEditingImage(null)}>
-                        <X className="w-5 h-5 text-slate-500" />
-                      </button>
-                    </div>
-                    <label className="block text-sm text-slate-600 mb-2">Image URL</label>
-                    <input
-                      type="text"
-                      value={content[`image${i}Url`] || imageUrl}
-                      onChange={(e) => handleUpdateField(`image${i}Url`, e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                      placeholder="Enter image URL..."
-                    />
-                    <button
-                      onClick={() => setEditingImage(null)}
-                      className="w-full py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors"
-                    >
-                      Done
-                    </button>
-                  </div>
-                )}
               </div>
             );
           })}
@@ -161,6 +144,6 @@ export const ImageGalleryBlock = ({ block, onUpdate, isPreview }: ImageGalleryBl
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

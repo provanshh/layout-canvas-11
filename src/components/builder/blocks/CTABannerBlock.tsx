@@ -1,90 +1,73 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
-import { Button } from '@/components/ui/button';
+import { EditableButton } from '../EditableButton';
 import { ArrowRight } from 'lucide-react';
 
-interface CTABannerBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-}
+export const CTABannerBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText }: BaseBlockProps) => {
+  const { content } = block;
 
-export const CTABannerBlock = ({ block, onUpdate, isPreview }: CTABannerBlockProps) => {
   const updateField = (field: string, value: string) => {
-    onUpdate({ ...block.content, [field]: value });
+    onUpdate({ ...content, [field]: value });
   };
 
   return (
-    <section className="py-12 px-6 bg-gradient-to-r from-primary to-primary/80">
+    <div className="py-12 px-6 bg-gradient-to-r from-primary to-primary/80">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-center md:text-left">
-          {isPreview ? (
-            <>
-              <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
-                {block.content.headline}
-              </h2>
-              <p className="text-primary-foreground/80">
-                {block.content.subtext}
-              </p>
-            </>
-          ) : (
-            <>
-              <EditableText
-                value={block.content.headline}
-                onChange={(val) => updateField('headline', val)}
-                className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2"
-              />
-              <EditableText
-                value={block.content.subtext}
-                onChange={(val) => updateField('subtext', val)}
-                className="text-primary-foreground/80"
-              />
-            </>
-          )}
+          <EditableText
+            as="h2"
+            value={content.headline}
+            onChange={(val) => updateField('headline', val)}
+            className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-headline`}
+          />
+          <EditableText
+            as="p"
+            value={content.subtext}
+            onChange={(val) => updateField('subtext', val)}
+            className="text-primary-foreground/80 block"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-subtext`}
+          />
         </div>
         
         <div className="flex gap-4">
-          <Button 
-            variant="secondary" 
-            size="lg"
-            className="group"
-          >
-            {isPreview ? (
-              <span className="flex items-center gap-2">
-                {block.content.buttonText}
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                <EditableText
-                  value={block.content.buttonText}
-                  onChange={(val) => updateField('buttonText', val)}
-                  className="text-inherit"
-                />
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            )}
-          </Button>
+          <EditableButton
+            text={content.buttonText || 'Get Started'}
+            bgColor={content.buttonBgColor || '#ffffff'}
+            textColor={content.buttonTextColor || '#0891b2'}
+            link={content.buttonLink || '#'}
+            className="px-6 py-3 rounded-lg font-medium flex items-center gap-2"
+            isPreview={isPreview}
+            onEditButton={onEditButton}
+            buttonId={`${block.id}-cta-btn`}
+            onTextChange={(v) => updateField('buttonText', v)}
+            onBgColorChange={(v) => updateField('buttonBgColor', v)}
+            onTextColorChange={(v) => updateField('buttonTextColor', v)}
+            onLinkChange={(v) => updateField('buttonLink', v)}
+          />
           
-          {block.content.secondaryButtonText && (
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              {isPreview ? (
-                block.content.secondaryButtonText
-              ) : (
-                <EditableText
-                  value={block.content.secondaryButtonText}
-                  onChange={(val) => updateField('secondaryButtonText', val)}
-                  className="text-inherit"
-                />
-              )}
-            </Button>
+          {content.secondaryButtonText && (
+            <EditableButton
+              text={content.secondaryButtonText}
+              bgColor={content.secondaryButtonBgColor || 'transparent'}
+              textColor={content.secondaryButtonTextColor || '#ffffff'}
+              link={content.secondaryButtonLink || '#'}
+              className="px-6 py-3 rounded-lg font-medium border border-primary-foreground/30"
+              isPreview={isPreview}
+              onEditButton={onEditButton}
+              buttonId={`${block.id}-secondary-btn`}
+              onTextChange={(v) => updateField('secondaryButtonText', v)}
+              onBgColorChange={(v) => updateField('secondaryButtonBgColor', v)}
+              onTextColorChange={(v) => updateField('secondaryButtonTextColor', v)}
+              onLinkChange={(v) => updateField('secondaryButtonLink', v)}
+            />
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

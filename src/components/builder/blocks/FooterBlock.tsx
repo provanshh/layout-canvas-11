@@ -1,14 +1,13 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
 import { Facebook, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
 
-interface FooterBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-}
-
-export const FooterBlock = ({ block, onUpdate, isPreview }: FooterBlockProps) => {
+export const FooterBlock = ({ 
+  block, 
+  onUpdate, 
+  isPreview,
+  onEditText 
+}: BaseBlockProps) => {
   const { content } = block;
 
   const handleUpdateField = (field: string, value: string) => {
@@ -30,16 +29,22 @@ export const FooterBlock = ({ block, onUpdate, isPreview }: FooterBlockProps) =>
           {/* Brand Column */}
           <div className="col-span-1 md:col-span-2">
             <EditableText
+              as="h3"
               value={content.brandName || 'YourBrand'}
               onChange={(val) => handleUpdateField('brandName', val)}
               className="text-2xl font-bold mb-4 block"
               isPreview={isPreview}
+              onEditText={onEditText}
+              textId={`${block.id}-brandName`}
             />
             <EditableText
+              as="p"
               value={content.description || 'Building amazing digital experiences for the modern web.'}
               onChange={(val) => handleUpdateField('description', val)}
               className="text-slate-400 mb-6 block"
               isPreview={isPreview}
+              onEditText={onEditText}
+              textId={`${block.id}-description`}
             />
             <div className="flex gap-4">
               {socialIcons.map(({ icon: Icon, key }) => (
@@ -57,10 +62,13 @@ export const FooterBlock = ({ block, onUpdate, isPreview }: FooterBlockProps) =>
           {/* Links Column 1 */}
           <div>
             <EditableText
+              as="h3"
               value={content.col1Title || 'Company'}
               onChange={(val) => handleUpdateField('col1Title', val)}
               className="font-semibold mb-4 block"
               isPreview={isPreview}
+              onEditText={onEditText}
+              textId={`${block.id}-col1Title`}
             />
             <div className="space-y-2">
               <EditableText
@@ -68,18 +76,24 @@ export const FooterBlock = ({ block, onUpdate, isPreview }: FooterBlockProps) =>
                 onChange={(val) => handleUpdateField('col1Link1', val)}
                 className="text-slate-400 hover:text-white transition-colors block cursor-pointer"
                 isPreview={isPreview}
+                onEditText={onEditText}
+                textId={`${block.id}-col1Link1`}
               />
               <EditableText
                 value={content.col1Link2 || 'Careers'}
                 onChange={(val) => handleUpdateField('col1Link2', val)}
                 className="text-slate-400 hover:text-white transition-colors block cursor-pointer"
                 isPreview={isPreview}
+                onEditText={onEditText}
+                textId={`${block.id}-col1Link2`}
               />
               <EditableText
                 value={content.col1Link3 || 'Blog'}
                 onChange={(val) => handleUpdateField('col1Link3', val)}
                 className="text-slate-400 hover:text-white transition-colors block cursor-pointer"
                 isPreview={isPreview}
+                onEditText={onEditText}
+                textId={`${block.id}-col1Link3`}
               />
             </div>
           </div>
@@ -87,10 +101,13 @@ export const FooterBlock = ({ block, onUpdate, isPreview }: FooterBlockProps) =>
           {/* Links Column 2 */}
           <div>
             <EditableText
+              as="h3"
               value={content.col2Title || 'Support'}
               onChange={(val) => handleUpdateField('col2Title', val)}
               className="font-semibold mb-4 block"
               isPreview={isPreview}
+              onEditText={onEditText}
+              textId={`${block.id}-col2Title`}
             />
             <div className="space-y-2">
               <EditableText
@@ -98,18 +115,24 @@ export const FooterBlock = ({ block, onUpdate, isPreview }: FooterBlockProps) =>
                 onChange={(val) => handleUpdateField('col2Link1', val)}
                 className="text-slate-400 hover:text-white transition-colors block cursor-pointer"
                 isPreview={isPreview}
+                onEditText={onEditText}
+                textId={`${block.id}-col2Link1`}
               />
               <EditableText
                 value={content.col2Link2 || 'Contact'}
                 onChange={(val) => handleUpdateField('col2Link2', val)}
                 className="text-slate-400 hover:text-white transition-colors block cursor-pointer"
                 isPreview={isPreview}
+                onEditText={onEditText}
+                textId={`${block.id}-col2Link2`}
               />
               <EditableText
                 value={content.col2Link3 || 'Privacy Policy'}
                 onChange={(val) => handleUpdateField('col2Link3', val)}
                 className="text-slate-400 hover:text-white transition-colors block cursor-pointer"
                 isPreview={isPreview}
+                onEditText={onEditText}
+                textId={`${block.id}-col2Link3`}
               />
             </div>
           </div>
@@ -118,10 +141,13 @@ export const FooterBlock = ({ block, onUpdate, isPreview }: FooterBlockProps) =>
         {/* Copyright */}
         <div className="border-t border-slate-800 pt-8 text-center">
           <EditableText
+            as="p"
             value={content.copyright || '© 2024 YourBrand. All rights reserved.'}
             onChange={(val) => handleUpdateField('copyright', val)}
             className="text-slate-500 text-sm"
             isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-copyright`}
           />
         </div>
       </div>

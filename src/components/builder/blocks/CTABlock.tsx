@@ -1,17 +1,8 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
 import { EditableButton } from '../EditableButton';
-import { TextEditConfig, ButtonEditConfig } from '../types';
 
-interface CTABlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-  onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
-  onEditText?: (textId: string, config: TextEditConfig) => void;
-}
-
-export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText }: CTABlockProps) => {
+export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText }: BaseBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -27,22 +18,6 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText 
     borderRadius: parseInt(content.buttonBorderRadius || '8'),
     link: content.buttonLink || '',
     openInNewTab: content.buttonOpenInNewTab === 'true',
-  };
-
-  const handleButtonClick = () => {
-    if (onEditButton) {
-      onEditButton(`${block.id}-cta`, {
-        ...buttonConfig,
-        onTextChange: (v: string) => updateField('buttonText', v),
-        onBgColorChange: (v: string) => updateField('buttonBgColor', v),
-        onTextColorChange: (v: string) => updateField('buttonTextColor', v),
-        onPaddingXChange: (v: number) => updateField('buttonPaddingX', v.toString()),
-        onPaddingYChange: (v: number) => updateField('buttonPaddingY', v.toString()),
-        onBorderRadiusChange: (v: number) => updateField('buttonBorderRadius', v.toString()),
-        onLinkChange: (v: string) => updateField('buttonLink', v),
-        onOpenInNewTabChange: (v: boolean) => updateField('buttonOpenInNewTab', v.toString()),
-      });
-    }
   };
 
   if (isPreview) {
@@ -66,7 +41,7 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText 
     );
 
     return (
-      <section className="py-20 px-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
+      <div className="py-20 px-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 
             className="text-4xl font-bold mb-4"
@@ -96,12 +71,12 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText 
             {content.note}
           </p>
         </div>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
+    <div className="py-20 px-6 bg-gradient-to-r from-cyan-600 to-blue-600 text-white">
       <div className="max-w-4xl mx-auto text-center">
         <EditableText
           as="h2"
@@ -131,8 +106,20 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText 
           paddingX={buttonConfig.paddingX}
           paddingY={buttonConfig.paddingY}
           borderRadius={buttonConfig.borderRadius}
-          onClick={handleButtonClick}
+          link={buttonConfig.link}
+          openInNewTab={buttonConfig.openInNewTab}
+          isPreview={isPreview}
+          onEditButton={onEditButton}
+          buttonId={`${block.id}-cta`}
           className="shadow-lg"
+          onTextChange={(v) => updateField('buttonText', v)}
+          onBgColorChange={(v) => updateField('buttonBgColor', v)}
+          onTextColorChange={(v) => updateField('buttonTextColor', v)}
+          onPaddingXChange={(v) => updateField('buttonPaddingX', v.toString())}
+          onPaddingYChange={(v) => updateField('buttonPaddingY', v.toString())}
+          onBorderRadiusChange={(v) => updateField('buttonBorderRadius', v.toString())}
+          onLinkChange={(v) => updateField('buttonLink', v)}
+          onOpenInNewTabChange={(v) => updateField('buttonOpenInNewTab', v.toString())}
         />
         <EditableText
           as="p"
@@ -145,6 +132,6 @@ export const CTABlock = ({ block, onUpdate, isPreview, onEditButton, onEditText 
           textId={`${block.id}-note`}
         />
       </div>
-    </section>
+    </div>
   );
 };

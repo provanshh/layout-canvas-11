@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ButtonEditConfig } from './types';
 
 interface EditableButtonProps {
   text: string;
@@ -10,8 +10,17 @@ interface EditableButtonProps {
   link?: string;
   openInNewTab?: boolean;
   isPreview?: boolean;
-  onClick?: () => void;
   className?: string;
+  buttonId?: string;
+  onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
+  onTextChange?: (v: string) => void;
+  onBgColorChange?: (v: string) => void;
+  onTextColorChange?: (v: string) => void;
+  onLinkChange?: (v: string) => void;
+  onOpenInNewTabChange?: (v: boolean) => void;
+  onPaddingXChange?: (v: number) => void;
+  onPaddingYChange?: (v: number) => void;
+  onBorderRadiusChange?: (v: number) => void;
 }
 
 export const EditableButton = ({
@@ -21,11 +30,20 @@ export const EditableButton = ({
   paddingX = 32,
   paddingY = 12,
   borderRadius = 8,
-  link,
+  link = '',
   openInNewTab = false,
   isPreview = false,
-  onClick,
   className = '',
+  buttonId,
+  onEditButton,
+  onTextChange,
+  onBgColorChange,
+  onTextColorChange,
+  onLinkChange,
+  onOpenInNewTabChange,
+  onPaddingXChange,
+  onPaddingYChange,
+  onBorderRadiusChange,
 }: EditableButtonProps) => {
   const buttonStyle: React.CSSProperties = {
     backgroundColor: bgColor,
@@ -37,9 +55,35 @@ export const EditableButton = ({
     borderRadius: `${borderRadius}px`,
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (onEditButton && buttonId) {
+      const config: ButtonEditConfig = {
+        text,
+        bgColor,
+        textColor,
+        paddingX,
+        paddingY,
+        borderRadius,
+        link,
+        openInNewTab,
+        onTextChange: onTextChange || (() => {}),
+        onBgColorChange: onBgColorChange || (() => {}),
+        onTextColorChange: onTextColorChange || (() => {}),
+        onPaddingXChange: onPaddingXChange || (() => {}),
+        onPaddingYChange: onPaddingYChange || (() => {}),
+        onBorderRadiusChange: onBorderRadiusChange || (() => {}),
+        onLinkChange: onLinkChange || (() => {}),
+        onOpenInNewTabChange: onOpenInNewTabChange || (() => {}),
+      };
+      onEditButton(buttonId, config);
+    }
+  };
+
   const buttonContent = (
     <button
-      onClick={onClick}
+      onClick={!isPreview ? handleClick : undefined}
       style={buttonStyle}
       className={`font-semibold transition-all hover:opacity-90 ${!isPreview ? 'cursor-pointer ring-2 ring-transparent hover:ring-primary/30' : ''} ${className}`}
       title={!isPreview ? 'Click to edit button' : undefined}

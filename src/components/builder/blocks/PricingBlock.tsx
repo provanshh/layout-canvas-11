@@ -1,14 +1,15 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
+import { EditableButton } from '../EditableButton';
 import { Check } from 'lucide-react';
 
-interface PricingBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-}
-
-export const PricingBlock = ({ block, onUpdate, isPreview }: PricingBlockProps) => {
+export const PricingBlock = ({ 
+  block, 
+  onUpdate, 
+  isPreview, 
+  onEditButton,
+  onEditText 
+}: BaseBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -20,8 +21,10 @@ export const PricingBlock = ({ block, onUpdate, isPreview }: PricingBlockProps) 
       nameKey: 'plan1Name', 
       priceKey: 'plan1Price', 
       featuresKey: 'plan1Features',
+      buttonTextKey: 'plan1ButtonText',
       buttonColorKey: 'plan1ButtonColor',
       buttonTextColorKey: 'plan1ButtonTextColor',
+      buttonLinkKey: 'plan1ButtonLink',
       highlighted: false 
     },
     { 
@@ -29,56 +32,47 @@ export const PricingBlock = ({ block, onUpdate, isPreview }: PricingBlockProps) 
       priceKey: 'plan2Price', 
       featuresKey: 'plan2Features',
       badgeKey: 'plan2Badge',
+      buttonTextKey: 'plan2ButtonText',
       buttonColorKey: 'plan2ButtonColor',
       buttonTextColorKey: 'plan2ButtonTextColor',
+      buttonLinkKey: 'plan2ButtonLink',
       highlighted: true 
     },
   ];
 
   return (
-    <section className="py-16 px-6 bg-white">
+    <div className="py-16 px-6 bg-white">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          {isPreview ? (
-            <>
-              <h2 
-                className="text-3xl font-bold mb-4"
-                style={{ color: content.titleColor || '#0f172a' }}
-              >
-                {content.title}
-              </h2>
-              <p 
-                className="text-lg"
-                style={{ color: content.subtitleColor || '#475569' }}
-              >
-                {content.subtitle}
-              </p>
-            </>
-          ) : (
-            <>
-              <EditableText
-                as="h2"
-                value={content.title}
-                onChange={(v) => updateField('title', v)}
-                color={content.titleColor || '#0f172a'}
-                onColorChange={(c) => updateField('titleColor', c)}
-                className="text-3xl font-bold mb-4"
-              />
-              <EditableText
-                as="p"
-                value={content.subtitle}
-                onChange={(v) => updateField('subtitle', v)}
-                color={content.subtitleColor || '#475569'}
-                onColorChange={(c) => updateField('subtitleColor', c)}
-                className="text-lg block"
-              />
-            </>
-          )}
+          <EditableText
+            as="h2"
+            value={content.title}
+            onChange={(v) => updateField('title', v)}
+            color={content.titleColor || '#0f172a'}
+            onColorChange={(c) => updateField('titleColor', c)}
+            className="text-3xl font-bold mb-4"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-title`}
+          />
+          <EditableText
+            as="p"
+            value={content.subtitle}
+            onChange={(v) => updateField('subtitle', v)}
+            color={content.subtitleColor || '#475569'}
+            onColorChange={(c) => updateField('subtitleColor', c)}
+            className="text-lg block"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-subtitle`}
+          />
         </div>
         <div className="grid md:grid-cols-2 gap-6">
-          {plans.map(({ nameKey, priceKey, featuresKey, badgeKey, buttonColorKey, buttonTextColorKey, highlighted }) => {
+          {plans.map(({ nameKey, priceKey, featuresKey, badgeKey, buttonTextKey, buttonColorKey, buttonTextColorKey, buttonLinkKey, highlighted }) => {
             const buttonBg = content[buttonColorKey] || (highlighted ? '#0891b2' : '#f1f5f9');
             const buttonText = content[buttonTextColorKey] || (highlighted ? '#ffffff' : '#0f172a');
+            const buttonLabel = content[buttonTextKey] || 'Get Started';
+            const buttonLink = content[buttonLinkKey] || '#';
             
             return (
               <div
@@ -95,31 +89,25 @@ export const PricingBlock = ({ block, onUpdate, isPreview }: PricingBlockProps) 
                   </span>
                 )}
                 <div className="text-center mb-6">
-                  {isPreview ? (
-                    <>
-                      <h3 className="text-xl font-semibold text-slate-900 mb-2">{content[nameKey]}</h3>
-                      <div className="text-4xl font-bold text-slate-900">
-                        {content[priceKey]}
-                        <span className="text-lg font-normal text-slate-500">/mo</span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <EditableText
-                        as="h3"
-                        value={content[nameKey]}
-                        onChange={(v) => updateField(nameKey, v)}
-                        className="text-xl font-semibold text-slate-900 mb-2"
-                      />
-                      <div className="text-4xl font-bold text-slate-900">
-                        <EditableText
-                          value={content[priceKey]}
-                          onChange={(v) => updateField(priceKey, v)}
-                        />
-                        <span className="text-lg font-normal text-slate-500">/mo</span>
-                      </div>
-                    </>
-                  )}
+                  <EditableText
+                    as="h3"
+                    value={content[nameKey]}
+                    onChange={(v) => updateField(nameKey, v)}
+                    className="text-xl font-semibold text-slate-900 mb-2"
+                    isPreview={isPreview}
+                    onEditText={onEditText}
+                    textId={`${block.id}-${nameKey}`}
+                  />
+                  <div className="text-4xl font-bold text-slate-900">
+                    <EditableText
+                      value={content[priceKey]}
+                      onChange={(v) => updateField(priceKey, v)}
+                      isPreview={isPreview}
+                      onEditText={onEditText}
+                      textId={`${block.id}-${priceKey}`}
+                    />
+                    <span className="text-lg font-normal text-slate-500">/mo</span>
+                  </div>
                 </div>
                 <ul className="space-y-3 mb-8">
                   {content[featuresKey]?.split(', ').map((feature, i) => (
@@ -129,38 +117,25 @@ export const PricingBlock = ({ block, onUpdate, isPreview }: PricingBlockProps) 
                     </li>
                   ))}
                 </ul>
-                <button
-                  className="w-full py-3 rounded-lg font-semibold transition-colors hover:opacity-90"
-                  style={{ backgroundColor: buttonBg, color: buttonText }}
-                >
-                  Get Started
-                </button>
-                {!isPreview && (
-                  <div className="mt-3 flex gap-2 justify-center">
-                    <div className="flex items-center gap-1 text-xs text-slate-400">
-                      <span>Button:</span>
-                      <input
-                        type="color"
-                        value={buttonBg}
-                        onChange={(e) => updateField(buttonColorKey, e.target.value)}
-                        className="w-5 h-5 rounded cursor-pointer border-0"
-                        title="Button color"
-                      />
-                      <input
-                        type="color"
-                        value={buttonText}
-                        onChange={(e) => updateField(buttonTextColorKey, e.target.value)}
-                        className="w-5 h-5 rounded cursor-pointer border-0"
-                        title="Button text color"
-                      />
-                    </div>
-                  </div>
-                )}
+                <EditableButton
+                  text={buttonLabel}
+                  bgColor={buttonBg}
+                  textColor={buttonText}
+                  link={buttonLink}
+                  className="w-full py-3 rounded-lg font-semibold"
+                  isPreview={isPreview}
+                  onEditButton={onEditButton}
+                  buttonId={`${block.id}-${nameKey}-btn`}
+                  onTextChange={(v) => updateField(buttonTextKey, v)}
+                  onBgColorChange={(v) => updateField(buttonColorKey, v)}
+                  onTextColorChange={(v) => updateField(buttonTextColorKey, v)}
+                  onLinkChange={(v) => updateField(buttonLinkKey, v)}
+                />
               </div>
             );
           })}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

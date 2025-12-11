@@ -1,13 +1,14 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
+import { EditableButton } from '../EditableButton';
 
-interface ContactBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-}
-
-export const ContactBlock = ({ block, onUpdate, isPreview }: ContactBlockProps) => {
+export const ContactBlock = ({ 
+  block, 
+  onUpdate, 
+  isPreview,
+  onEditButton,
+  onEditText 
+}: BaseBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -15,30 +16,27 @@ export const ContactBlock = ({ block, onUpdate, isPreview }: ContactBlockProps) 
   };
 
   return (
-    <section className="py-16 px-6 bg-slate-100">
+    <div className="py-16 px-6 bg-slate-100">
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-10">
-          {isPreview ? (
-            <>
-              <h2 className="text-3xl font-bold text-slate-900 mb-2">{content.title}</h2>
-              <p className="text-slate-600">{content.subtitle}</p>
-            </>
-          ) : (
-            <>
-              <EditableText
-                as="h2"
-                value={content.title}
-                onChange={(v) => updateField('title', v)}
-                className="text-3xl font-bold text-slate-900 mb-2"
-              />
-              <EditableText
-                as="p"
-                value={content.subtitle}
-                onChange={(v) => updateField('subtitle', v)}
-                className="text-slate-600 block"
-              />
-            </>
-          )}
+          <EditableText
+            as="h2"
+            value={content.title}
+            onChange={(v) => updateField('title', v)}
+            className="text-3xl font-bold text-slate-900 mb-2"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-title`}
+          />
+          <EditableText
+            as="p"
+            value={content.subtitle}
+            onChange={(v) => updateField('subtitle', v)}
+            className="text-slate-600 block"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-subtitle`}
+          />
         </div>
         <form className="space-y-4 bg-white p-8 rounded-2xl shadow-sm">
           <div>
@@ -65,19 +63,22 @@ export const ContactBlock = ({ block, onUpdate, isPreview }: ContactBlockProps) 
               disabled={isPreview}
             />
           </div>
-          <button
-            type="button"
-            className="w-full py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            {isPreview ? content.buttonText : (
-              <EditableText
-                value={content.buttonText}
-                onChange={(v) => updateField('buttonText', v)}
-              />
-            )}
-          </button>
+          <EditableButton
+            text={content.buttonText || 'Send Message'}
+            bgColor={content.buttonColor || '#0891b2'}
+            textColor={content.buttonTextColor || '#ffffff'}
+            link={content.buttonLink || '#'}
+            className="w-full py-3 rounded-lg font-semibold"
+            isPreview={isPreview}
+            onEditButton={onEditButton}
+            buttonId={`${block.id}-submit-btn`}
+            onTextChange={(v) => updateField('buttonText', v)}
+            onBgColorChange={(v) => updateField('buttonColor', v)}
+            onTextColorChange={(v) => updateField('buttonTextColor', v)}
+            onLinkChange={(v) => updateField('buttonLink', v)}
+          />
         </form>
       </div>
-    </section>
+    </div>
   );
 };
