@@ -1,4 +1,4 @@
-import { ComponentBlock } from '@/types/builder';
+import { ComponentBlock, BlockStyles } from '@/types/builder';
 
 export interface ProjectTemplate {
   id: string;
@@ -9,6 +9,14 @@ export interface ProjectTemplate {
 }
 
 const generateId = () => `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+// Default styles with no spacing
+const defaultStyles: BlockStyles = {
+  paddingTop: '0',
+  paddingBottom: '0',
+  marginTop: '0',
+  marginBottom: '0',
+};
 
 export const projectTemplates: ProjectTemplate[] = [
   {
@@ -38,6 +46,7 @@ export const projectTemplates: ProjectTemplate[] = [
           navLink4Href: '#contact',
           ctaText: 'Get Started',
         },
+        styles: { ...defaultStyles, backgroundColor: '#0f172a', textColor: '#ffffff' },
       },
       {
         type: 'hero',
@@ -47,6 +56,7 @@ export const projectTemplates: ProjectTemplate[] = [
           buttonText: 'Start Free Trial',
           buttonSecondary: 'Watch Demo',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)', textColor: '#ffffff', paddingTop: '80', paddingBottom: '80' },
       },
       {
         type: 'features',
@@ -60,6 +70,7 @@ export const projectTemplates: ProjectTemplate[] = [
           feature3Title: 'Easy Integration',
           feature3Desc: 'Connect with your favorite tools in minutes.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#f8fafc', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'testimonials',
@@ -74,6 +85,7 @@ export const projectTemplates: ProjectTemplate[] = [
           role2: 'Product Lead, Acme',
           avatar2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
         },
+        styles: { ...defaultStyles, backgroundColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'cta',
@@ -83,6 +95,7 @@ export const projectTemplates: ProjectTemplate[] = [
           buttonText: 'Start Free Trial',
           note: 'No credit card required',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)', textColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'footer',
@@ -99,6 +112,7 @@ export const projectTemplates: ProjectTemplate[] = [
           col2Link3: 'Careers',
           copyright: '© 2024 Starter. All rights reserved.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#0f172a', textColor: '#ffffff', paddingTop: '48', paddingBottom: '32' },
       },
     ],
   },
@@ -122,6 +136,7 @@ export const projectTemplates: ProjectTemplate[] = [
           navLink4Href: '#contact',
           ctaText: 'Hire Me',
         },
+        styles: { ...defaultStyles, backgroundColor: '#1e1b4b', textColor: '#ffffff' },
       },
       {
         type: 'hero',
@@ -131,6 +146,7 @@ export const projectTemplates: ProjectTemplate[] = [
           buttonText: 'View My Work',
           buttonSecondary: 'Get in Touch',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)', textColor: '#ffffff', paddingTop: '96', paddingBottom: '96' },
       },
       {
         type: 'imageGallery',
@@ -144,6 +160,7 @@ export const projectTemplates: ProjectTemplate[] = [
           image3Url: 'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=400&h=300&fit=crop',
           image3Caption: 'Mobile App',
         },
+        styles: { ...defaultStyles, backgroundColor: '#faf5ff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'features',
@@ -157,6 +174,7 @@ export const projectTemplates: ProjectTemplate[] = [
           feature3Title: 'UI/UX Design',
           feature3Desc: 'Designing intuitive user experiences.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#ffffff', paddingTop: '64', paddingBottom: '64', accentColor: '#8b5cf6' },
       },
       {
         type: 'contact',
@@ -168,6 +186,7 @@ export const projectTemplates: ProjectTemplate[] = [
           messagePlaceholder: 'Tell me about your project...',
           buttonText: 'Send Message',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%)', textColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'footer',
@@ -184,6 +203,7 @@ export const projectTemplates: ProjectTemplate[] = [
           col2Link3: 'Location',
           copyright: '© 2024 All rights reserved.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#1e1b4b', textColor: '#ffffff', paddingTop: '48', paddingBottom: '32' },
       },
     ],
   },
@@ -207,6 +227,7 @@ export const projectTemplates: ProjectTemplate[] = [
           navLink4Href: '#blog',
           ctaText: 'Start Free',
         },
+        styles: { ...defaultStyles, backgroundColor: '#022c22', textColor: '#ffffff' },
       },
       {
         type: 'hero',
@@ -216,6 +237,7 @@ export const projectTemplates: ProjectTemplate[] = [
           buttonText: 'Get Started Free',
           buttonSecondary: 'See How It Works',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #22c55e 0%, #06b6d4 100%)', textColor: '#ffffff', paddingTop: '80', paddingBottom: '80' },
       },
       {
         type: 'features',
@@ -229,6 +251,7 @@ export const projectTemplates: ProjectTemplate[] = [
           feature3Title: 'Automation',
           feature3Desc: 'Save time with intelligent workflow automation.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#ecfdf5', paddingTop: '64', paddingBottom: '64', accentColor: '#22c55e' },
       },
       {
         type: 'pricing',
@@ -243,6 +266,7 @@ export const projectTemplates: ProjectTemplate[] = [
           plan2Features: '25 Users, 100GB Storage, Priority Support',
           plan2Badge: 'Most Popular',
         },
+        styles: { ...defaultStyles, backgroundColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'faq',
@@ -255,6 +279,7 @@ export const projectTemplates: ProjectTemplate[] = [
           q3: 'What kind of support do you offer?',
           a3: 'We offer email support for all plans, with priority support for Professional and Enterprise customers.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#f0fdf4', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'cta',
@@ -264,6 +289,7 @@ export const projectTemplates: ProjectTemplate[] = [
           buttonText: 'Create Free Account',
           note: '14-day free trial',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #0d9488 0%, #22c55e 100%)', textColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'footer',
@@ -280,6 +306,7 @@ export const projectTemplates: ProjectTemplate[] = [
           col2Link3: 'Status',
           copyright: '© 2024 SaaSify. All rights reserved.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#022c22', textColor: '#ffffff', paddingTop: '48', paddingBottom: '32' },
       },
     ],
   },
@@ -303,6 +330,7 @@ export const projectTemplates: ProjectTemplate[] = [
           navLink4Href: '#contact',
           ctaText: 'Get Quote',
         },
+        styles: { ...defaultStyles, backgroundColor: '#18181b', textColor: '#ffffff' },
       },
       {
         type: 'hero',
@@ -312,6 +340,7 @@ export const projectTemplates: ProjectTemplate[] = [
           buttonText: 'Start a Project',
           buttonSecondary: 'Our Work',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)', textColor: '#ffffff', paddingTop: '96', paddingBottom: '96' },
       },
       {
         type: 'features',
@@ -325,6 +354,7 @@ export const projectTemplates: ProjectTemplate[] = [
           feature3Title: 'Development',
           feature3Desc: 'Cutting-edge technology solutions.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#fff7ed', paddingTop: '64', paddingBottom: '64', accentColor: '#f97316' },
       },
       {
         type: 'team',
@@ -344,6 +374,7 @@ export const projectTemplates: ProjectTemplate[] = [
           member3Bio: 'Full-stack engineer building scalable solutions.',
           member3Photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
         },
+        styles: { ...defaultStyles, backgroundColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'testimonials',
@@ -358,6 +389,7 @@ export const projectTemplates: ProjectTemplate[] = [
           role2: 'Founder, Startup',
           avatar2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
         },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #fef3c7 0%, #fce7f3 100%)', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'contact',
@@ -369,6 +401,7 @@ export const projectTemplates: ProjectTemplate[] = [
           messagePlaceholder: 'Tell us about your project...',
           buttonText: 'Send Message',
         },
+        styles: { ...defaultStyles, backgroundColor: '#18181b', textColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
       },
       {
         type: 'footer',
@@ -385,6 +418,105 @@ export const projectTemplates: ProjectTemplate[] = [
           col2Link3: 'Press',
           copyright: '© 2024 Creative Co. All rights reserved.',
         },
+        styles: { ...defaultStyles, backgroundColor: '#09090b', textColor: '#ffffff', paddingTop: '48', paddingBottom: '32' },
+      },
+    ],
+  },
+  {
+    id: 'vibrant-startup',
+    name: 'Vibrant Startup',
+    description: 'Bold colors and modern design for startups',
+    thumbnail: '🌈',
+    blocks: [
+      {
+        type: 'navbar',
+        content: {
+          logoText: 'Vivid',
+          navLink1Label: 'Features',
+          navLink1Href: '#features',
+          navLink2Label: 'Pricing',
+          navLink2Href: '#pricing',
+          navLink3Label: 'About',
+          navLink3Href: '#about',
+          navLink4Label: 'Contact',
+          navLink4Href: '#contact',
+          ctaText: 'Get Started',
+        },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(90deg, #7c3aed 0%, #db2777 100%)', textColor: '#ffffff' },
+      },
+      {
+        type: 'hero',
+        content: {
+          headline: 'Innovation Meets Design',
+          subheadline: 'Transform your ideas into reality with our cutting-edge platform. Built for creators, dreamers, and doers.',
+          buttonText: 'Launch Now',
+          buttonSecondary: 'Learn More',
+        },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #7c3aed 0%, #db2777 50%, #f97316 100%)', textColor: '#ffffff', paddingTop: '100', paddingBottom: '100' },
+      },
+      {
+        type: 'features',
+        content: {
+          title: 'Supercharge Your Workflow',
+          subtitle: 'Tools that adapt to your needs',
+          feature1Title: 'AI-Powered',
+          feature1Desc: 'Smart automation that learns and evolves with your business.',
+          feature2Title: 'Real-time Sync',
+          feature2Desc: 'Collaborate seamlessly across teams and time zones.',
+          feature3Title: 'Infinite Scale',
+          feature3Desc: 'From startup to enterprise, we grow with you.',
+        },
+        styles: { ...defaultStyles, backgroundColor: '#fdf4ff', paddingTop: '80', paddingBottom: '80', accentColor: '#a855f7' },
+      },
+      {
+        type: 'ctaBanner',
+        content: {
+          text: '🚀 Limited time: Get 50% off your first 3 months!',
+          buttonText: 'Claim Offer',
+        },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(90deg, #ec4899 0%, #f97316 100%)', textColor: '#ffffff' },
+      },
+      {
+        type: 'pricing',
+        content: {
+          title: 'Choose Your Adventure',
+          subtitle: 'Flexible plans for every stage',
+          plan1Name: 'Explorer',
+          plan1Price: '$29',
+          plan1Features: 'Unlimited projects, 50GB storage, Email support',
+          plan2Name: 'Voyager',
+          plan2Price: '$79',
+          plan2Features: 'Everything in Explorer + Priority support, API access',
+          plan2Badge: 'Best Value',
+        },
+        styles: { ...defaultStyles, backgroundColor: '#ffffff', paddingTop: '80', paddingBottom: '80' },
+      },
+      {
+        type: 'newsletter',
+        content: {
+          title: 'Stay in the Loop',
+          subtitle: 'Get exclusive updates, tips, and early access to new features.',
+          placeholder: 'Enter your email',
+          buttonText: 'Subscribe',
+        },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)', textColor: '#ffffff', paddingTop: '64', paddingBottom: '64' },
+      },
+      {
+        type: 'footer',
+        content: {
+          brandName: 'Vivid',
+          description: 'Where innovation meets imagination.',
+          col1Title: 'Product',
+          col1Link1: 'Features',
+          col1Link2: 'Integrations',
+          col1Link3: 'Roadmap',
+          col2Title: 'Company',
+          col2Link1: 'About',
+          col2Link2: 'Careers',
+          col2Link3: 'Press Kit',
+          copyright: '© 2024 Vivid. All rights reserved.',
+        },
+        styles: { ...defaultStyles, backgroundGradient: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', textColor: '#ffffff', paddingTop: '48', paddingBottom: '32' },
       },
     ],
   },
@@ -394,5 +526,6 @@ export const instantiateTemplate = (template: ProjectTemplate): ComponentBlock[]
   return template.blocks.map((block) => ({
     ...block,
     id: generateId(),
+    styles: block.styles || { ...defaultStyles },
   }));
 };
