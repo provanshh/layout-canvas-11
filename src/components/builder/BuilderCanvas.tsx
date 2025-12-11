@@ -48,38 +48,39 @@ const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect, onOpen
       }`}
       onClick={onSelect}
     >
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full pr-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-1">
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full pr-1.5 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-0.5">
         <button
           {...attributes}
           {...listeners}
-          className="p-2 bg-secondary rounded-lg hover:bg-muted transition-colors cursor-grab active:cursor-grabbing"
+          className="p-1.5 bg-secondary rounded hover:bg-muted transition-colors cursor-grab active:cursor-grabbing"
         >
-          <GripVertical className="w-4 h-4 text-muted-foreground" />
+          <GripVertical className="w-3 h-3 text-muted-foreground" />
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
             onOpenStylePanel();
           }}
-          className="p-2 bg-secondary rounded-lg hover:bg-primary/20 transition-colors"
-          title="Style this block"
+          className="p-1.5 bg-secondary rounded hover:bg-primary/20 transition-colors"
+          title="Style"
         >
-          <Paintbrush className="w-4 h-4 text-primary" />
+          <Paintbrush className="w-3 h-3 text-primary" />
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
             onDelete(block.id);
           }}
-          className="p-2 bg-destructive/10 rounded-lg hover:bg-destructive/20 transition-colors"
+          className="p-1.5 bg-destructive/10 rounded hover:bg-destructive/20 transition-colors"
         >
-          <Trash2 className="w-4 h-4 text-destructive" />
+          <Trash2 className="w-3 h-3 text-destructive" />
         </button>
       </div>
       <BlockRenderer
         block={block}
         onUpdate={(content) => onUpdate(block.id, content)}
         isDarkTheme={isDarkTheme}
+        onToggleTheme={onToggleTheme}
       />
     </motion.div>
   );
@@ -113,24 +114,24 @@ export const BuilderCanvas = ({
   return (
     <div
       ref={setNodeRef}
-      className={`flex-1 overflow-auto bg-muted/30 p-8`}
+      className={`flex-1 overflow-auto bg-muted/20 p-6`}
       onClick={() => onSelectBlock(null)}
     >
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <div
           className={`canvas-dropzone overflow-hidden ${isDarkTheme ? 'bg-slate-900' : 'bg-canvas'} ${
             isOver ? 'canvas-dropzone-active' : ''
           } ${blocks.length === 0 ? 'flex items-center justify-center' : 'border-0'}`}
         >
           {blocks.length === 0 ? (
-            <div className="text-center p-12">
-              <div className="w-16 h-16 bg-secondary rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-10">
+              <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center mx-auto mb-3">
                 <motion.div
-                  animate={{ y: [0, -5, 0] }}
+                  animate={{ y: [0, -3, 0] }}
                   transition={{ repeat: Infinity, duration: 2 }}
                 >
                   <svg
-                    className="w-8 h-8 text-primary"
+                    className="w-5 h-5 text-muted-foreground"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -138,17 +139,17 @@ export const BuilderCanvas = ({
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth={1.5}
                       d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
                     />
                   </svg>
                 </motion.div>
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                Start Building
+              <h3 className="text-sm font-medium text-foreground mb-1">
+                Drop components here
               </h3>
-              <p className="text-slate-500 max-w-sm">
-                Drag components from the sidebar and drop them here to start creating your page.
+              <p className="text-xs text-muted-foreground max-w-[200px] mx-auto">
+                Drag from the sidebar or choose a template to start
               </p>
             </div>
           ) : (

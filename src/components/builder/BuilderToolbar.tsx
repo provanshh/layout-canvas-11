@@ -28,39 +28,38 @@ export const BuilderToolbar = ({
   onOpenTemplates,
 }: BuilderToolbarProps) => {
   return (
-    <header className="h-12 bg-card/80 backdrop-blur-sm border-b border-border/50 flex items-center justify-between px-4">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary/80 to-accent/80 flex items-center justify-center">
-            <Layers className="w-3 h-3 text-primary-foreground" />
+    <header className="h-10 bg-card/95 backdrop-blur-md border-b border-border flex items-center justify-between px-3">
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <div className="w-5 h-5 rounded bg-primary flex items-center justify-center">
+            <Layers className="w-2.5 h-2.5 text-primary-foreground" />
           </div>
-          <span className="font-medium text-sm text-foreground">LayoutBuilder</span>
+          <span className="font-semibold text-[13px] text-foreground">Builder</span>
         </div>
-        <div className="h-4 w-px bg-border/50" />
+        <div className="h-3 w-px bg-border" />
         <button
           onClick={onOpenTemplates}
-          className="mac-button-text text-xs"
+          className="mac-button-text"
         >
-          <LayoutTemplate className="w-3.5 h-3.5" />
+          <LayoutTemplate className="w-3 h-3" />
           <span>Templates</span>
         </button>
-        <div className="h-4 w-px bg-border/50" />
         <button
           onClick={onOpenLayoutOverview}
-          className="text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-md hover:bg-muted/50 transition-colors"
+          className="text-[11px] text-muted-foreground hover:text-foreground px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
         >
-          {blockCount} {blockCount === 1 ? 'component' : 'components'}
+          {blockCount} blocks
         </button>
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5">
         <button
           onClick={onUndo}
           disabled={!canUndo}
           className="mac-button disabled:opacity-30 disabled:cursor-not-allowed"
           title="Undo"
         >
-          <Undo className="w-3.5 h-3.5" />
+          <Undo className="w-3 h-3" />
         </button>
         <button
           onClick={onRedo}
@@ -68,28 +67,28 @@ export const BuilderToolbar = ({
           className="mac-button disabled:opacity-30 disabled:cursor-not-allowed"
           title="Redo"
         >
-          <Redo className="w-3.5 h-3.5" />
+          <Redo className="w-3 h-3" />
         </button>
         
-        <div className="h-4 w-px bg-border/50 mx-1" />
+        <div className="h-3 w-px bg-border mx-0.5" />
         
         <button
           onClick={onToggleTheme}
           className="mac-button"
-          title={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
+          title={isDarkTheme ? 'Light mode' : 'Dark mode'}
         >
-          {isDarkTheme ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+          {isDarkTheme ? <Sun className="w-3 h-3" /> : <Moon className="w-3 h-3" />}
         </button>
         
         <button
           onClick={onPreview}
           className="mac-button-text"
         >
-          <Eye className="w-3.5 h-3.5" />
+          <Eye className="w-3 h-3" />
           <span>Preview</span>
         </button>
         <button onClick={onExport} className="mac-button-primary">
-          <Download className="w-3.5 h-3.5" />
+          <Download className="w-3 h-3" />
           <span>Export</span>
         </button>
       </div>
