@@ -18,7 +18,7 @@ import { BuilderCanvas } from '@/components/builder/BuilderCanvas';
 import { BuilderToolbar } from '@/components/builder/BuilderToolbar';
 import { PreviewModal } from '@/components/builder/PreviewModal';
 import { ExportModal } from '@/components/builder/ExportModal';
-import { StylePanel } from '@/components/builder/StylePanel';
+import { SectionEditorPanel } from '@/components/builder/SectionEditorPanel';
 import { LayoutOverviewModal } from '@/components/builder/LayoutOverviewModal';
 import { TemplatesModal } from '@/components/builder/TemplatesModal';
 import { ButtonEditPanel } from '@/components/builder/ButtonEditPanel';
@@ -59,8 +59,7 @@ const Index = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [showStylePanel, setShowStylePanel] = useState(false);
-  const [stylePanelBlockId, setStylePanelBlockId] = useState<string | null>(null);
+  const [showSectionEditor, setShowSectionEditor] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [isEditorDark, setIsEditorDark] = useState(false);
   const [showLayoutOverview, setShowLayoutOverview] = useState(false);
@@ -173,21 +172,21 @@ const Index = () => {
       setBlocks(blocks.filter((block) => block.id !== id));
       if (selectedBlockId === id) {
         setSelectedBlockId(null);
-      }
-      if (stylePanelBlockId === id) {
-        setShowStylePanel(false);
-        setStylePanelBlockId(null);
+        setShowSectionEditor(false);
       }
       toast.success('Block deleted');
     },
-    [blocks, setBlocks, selectedBlockId, stylePanelBlockId]
+    [blocks, setBlocks, selectedBlockId]
   );
 
-  const handleOpenStylePanel = (id: string) => {
-    setStylePanelBlockId(id);
+  const handleSelectBlock = (id: string | null) => {
     setSelectedBlockId(id);
-    closeAllPanels();
-    setShowStylePanel(true);
+    if (id) {
+      closeAllPanels();
+      setShowSectionEditor(true);
+    } else {
+      setShowSectionEditor(false);
+    }
   };
 
   const handleTogglePreviewTheme = () => {
@@ -211,7 +210,6 @@ const Index = () => {
     setShowButtonPanel(false);
     setShowTextPanel(false);
     setShowImagePanel(false);
-    setShowStylePanel(false);
   };
 
   const handleEditButton = useCallback((buttonId: string, config: ButtonEditConfig) => {
@@ -247,8 +245,8 @@ const Index = () => {
     setImageEditConfig(null);
   };
 
-  const selectedBlock = stylePanelBlockId
-    ? blocks.find(b => b.id === stylePanelBlockId) || null 
+  const selectedBlock = selectedBlockId
+    ? blocks.find(b => b.id === selectedBlockId) || null 
     : null;
 
   return (
@@ -284,8 +282,8 @@ const Index = () => {
             onUpdateBlock={handleUpdateBlock}
             onDeleteBlock={handleDeleteBlock}
             selectedBlockId={selectedBlockId}
-            onSelectBlock={setSelectedBlockId}
-            onOpenStylePanel={handleOpenStylePanel}
+            onSelectBlock={handleSelectBlock}
+            onOpenStylePanel={(id) => handleSelectBlock(id)}
             isDarkTheme={isDarkTheme}
             onToggleTheme={handleTogglePreviewTheme}
             onEditButton={handleEditButton}
@@ -305,13 +303,14 @@ const Index = () => {
           </DragOverlay>
         </DndContext>
 
-        {showStylePanel && (
-          <StylePanel
+        {showSectionEditor && selectedBlock && (
+          <SectionEditorPanel
             block={selectedBlock}
+            onUpdateContent={handleUpdateBlock}
             onUpdateStyles={handleUpdateBlockStyles}
             onClose={() => {
-              setShowStylePanel(false);
-              setStylePanelBlockId(null);
+              setShowSectionEditor(false);
+              setSelectedBlockId(null);
             }}
           />
         )}
