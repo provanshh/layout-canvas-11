@@ -1,4 +1,4 @@
-import { Eye, Download, Undo, Redo, Layers } from 'lucide-react';
+import { Eye, Download, Undo, Redo, Layers, Sun, Moon } from 'lucide-react';
 
 interface BuilderToolbarProps {
   onPreview: () => void;
@@ -8,6 +8,8 @@ interface BuilderToolbarProps {
   canRedo: boolean;
   onUndo: () => void;
   onRedo: () => void;
+  isDarkTheme: boolean;
+  onToggleTheme: () => void;
 }
 
 export const BuilderToolbar = ({
@@ -18,6 +20,8 @@ export const BuilderToolbar = ({
   canRedo,
   onUndo,
   onRedo,
+  isDarkTheme,
+  onToggleTheme,
 }: BuilderToolbarProps) => {
   return (
     <header className="h-14 bg-card border-b border-border flex items-center justify-between px-4">
@@ -53,6 +57,15 @@ export const BuilderToolbar = ({
             <Redo className="w-4 h-4" />
           </button>
         </div>
+        
+        <button
+          onClick={onToggleTheme}
+          className="toolbar-button"
+          title={isDarkTheme ? 'Switch to light theme' : 'Switch to dark theme'}
+        >
+          {isDarkTheme ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        </button>
+        
         <button
           onClick={onPreview}
           className="toolbar-button flex items-center gap-2 w-auto px-3"

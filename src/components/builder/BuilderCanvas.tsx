@@ -7,7 +7,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { ComponentBlock } from '@/types/builder';
 import { BlockRenderer } from './BlockRenderer';
-import { Trash2, GripVertical } from 'lucide-react';
+import { Trash2, GripVertical, Paintbrush } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SortableBlockProps {
@@ -16,9 +16,12 @@ interface SortableBlockProps {
   onDelete: (id: string) => void;
   isSelected: boolean;
   onSelect: () => void;
+  onOpenStylePanel: () => void;
+  isDarkTheme: boolean;
+  onToggleTheme: () => void;
 }
 
-const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect }: SortableBlockProps) => {
+const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect, onOpenStylePanel, isDarkTheme, onToggleTheme }: SortableBlockProps) => {
   const {
     attributes,
     listeners,
@@ -56,6 +59,16 @@ const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect }: Sort
         <button
           onClick={(e) => {
             e.stopPropagation();
+            onOpenStylePanel();
+          }}
+          className="p-2 bg-secondary rounded-lg hover:bg-primary/20 transition-colors"
+          title="Style this block"
+        >
+          <Paintbrush className="w-4 h-4 text-primary" />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
             onDelete(block.id);
           }}
           className="p-2 bg-destructive/10 rounded-lg hover:bg-destructive/20 transition-colors"
@@ -66,6 +79,7 @@ const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect }: Sort
       <BlockRenderer
         block={block}
         onUpdate={(content) => onUpdate(block.id, content)}
+        isDarkTheme={isDarkTheme}
       />
     </motion.div>
   );
@@ -77,6 +91,9 @@ interface BuilderCanvasProps {
   onDeleteBlock: (id: string) => void;
   selectedBlockId: string | null;
   onSelectBlock: (id: string | null) => void;
+  onOpenStylePanel: (id: string) => void;
+  isDarkTheme: boolean;
+  onToggleTheme: () => void;
 }
 
 export const BuilderCanvas = ({
@@ -85,6 +102,9 @@ export const BuilderCanvas = ({
   onDeleteBlock,
   selectedBlockId,
   onSelectBlock,
+  onOpenStylePanel,
+  isDarkTheme,
+  onToggleTheme,
 }: BuilderCanvasProps) => {
   const { setNodeRef, isOver } = useDroppable({
     id: 'canvas',
@@ -93,12 +113,12 @@ export const BuilderCanvas = ({
   return (
     <div
       ref={setNodeRef}
-      className={`flex-1 min-w-[800px] overflow-auto bg-muted/30 p-8`}
+      className={`flex-1 overflow-auto bg-muted/30 p-8`}
       onClick={() => onSelectBlock(null)}
     >
       <div className="max-w-5xl mx-auto">
         <div
-          className={`canvas-dropzone bg-canvas overflow-hidden ${
+          className={`canvas-dropzone overflow-hidden ${isDarkTheme ? 'bg-slate-900' : 'bg-canvas'} ${
             isOver ? 'canvas-dropzone-active' : ''
           } ${blocks.length === 0 ? 'flex items-center justify-center' : 'border-0'}`}
         >
@@ -145,6 +165,9 @@ export const BuilderCanvas = ({
                     onDelete={onDeleteBlock}
                     isSelected={selectedBlockId === block.id}
                     onSelect={() => onSelectBlock(block.id)}
+                    onOpenStylePanel={() => onOpenStylePanel(block.id)}
+                    isDarkTheme={isDarkTheme}
+                    onToggleTheme={onToggleTheme}
                   />
                 ))}
               </AnimatePresence>

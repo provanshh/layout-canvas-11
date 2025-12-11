@@ -18,6 +18,7 @@ import { BuilderCanvas } from '@/components/builder/BuilderCanvas';
 import { BuilderToolbar } from '@/components/builder/BuilderToolbar';
 import { PreviewModal } from '@/components/builder/PreviewModal';
 import { ExportModal } from '@/components/builder/ExportModal';
+import { StylePanel } from '@/components/builder/StylePanel';
 import { useBuilderHistory } from '@/hooks/useBuilderHistory';
 
 const generateId = () => `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -28,6 +29,10 @@ const Index = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showExport, setShowExport] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showStylePanel, setShowStylePanel] = useState(false);
+  const [stylePanelBlockId, setStylePanelBlockId] = useState<string | null>(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -100,9 +105,27 @@ const Index = () => {
       if (selectedBlockId === id) {
         setSelectedBlockId(null);
       }
+      if (stylePanelBlockId === id) {
+        setShowStylePanel(false);
+        setStylePanelBlockId(null);
+      }
     },
-    [blocks, setBlocks, selectedBlockId]
+    [blocks, setBlocks, selectedBlockId, stylePanelBlockId]
   );
+
+  const handleOpenStylePanel = (id: string) => {
+    setStylePanelBlockId(id);
+    setShowStylePanel(true);
+    setSelectedBlockId(id);
+  };
+
+  const handleToggleTheme = () => {
+    setIsDarkTheme(!isDarkTheme);
+  };
+
+  const selectedBlock = stylePanelBlockId 
+    ? blocks.find(b => b.id === stylePanelBlockId) || null 
+    : null;
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
@@ -114,6 +137,8 @@ const Index = () => {
         canRedo={canRedo}
         onUndo={undo}
         onRedo={redo}
+        isDarkTheme={isDarkTheme}
+        onToggleTheme={handleToggleTheme}
       />
       
       <div className="flex-1 flex overflow-hidden">
@@ -123,17 +148,20 @@ const Index = () => {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <ComponentSidebar />
-          <div className="w-1 bg-border hover:bg-primary/50 cursor-col-resize transition-colors flex-shrink-0" />
-          <div className="flex-1 overflow-x-auto overflow-y-hidden">
-            <BuilderCanvas
-              blocks={blocks}
-              onUpdateBlock={handleUpdateBlock}
-              onDeleteBlock={handleDeleteBlock}
-              selectedBlockId={selectedBlockId}
-              onSelectBlock={setSelectedBlockId}
-            />
-          </div>
+          <ComponentSidebar 
+            isCollapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+          />
+          <BuilderCanvas
+            blocks={blocks}
+            onUpdateBlock={handleUpdateBlock}
+            onDeleteBlock={handleDeleteBlock}
+            selectedBlockId={selectedBlockId}
+            onSelectBlock={setSelectedBlockId}
+            onOpenStylePanel={handleOpenStylePanel}
+            isDarkTheme={isDarkTheme}
+            onToggleTheme={handleToggleTheme}
+          />
           <DragOverlay>
             {activeId && activeId.startsWith('template-') && (
               <div className="p-4 bg-card border border-primary rounded-lg shadow-lg opacity-80">
@@ -146,12 +174,24 @@ const Index = () => {
             )}
           </DragOverlay>
         </DndContext>
+
+        {showStylePanel && (
+          <StylePanel
+            block={selectedBlock}
+            onUpdateStyles={handleUpdateBlock}
+            onClose={() => {
+              setShowStylePanel(false);
+              setStylePanelBlockId(null);
+            }}
+          />
+        )}
       </div>
 
       <PreviewModal
         isOpen={showPreview}
         onClose={() => setShowPreview(false)}
         blocks={blocks}
+        isDarkTheme={isDarkTheme}
       />
       
       <ExportModal

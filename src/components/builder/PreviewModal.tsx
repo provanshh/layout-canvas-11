@@ -8,6 +8,7 @@ interface PreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   blocks: ComponentBlock[];
+  isDarkTheme?: boolean;
 }
 
 type ViewportSize = 'mobile' | 'tablet' | 'desktop';
@@ -18,7 +19,7 @@ const viewportSizes: Record<ViewportSize, string> = {
   desktop: 'w-full max-w-[1200px]',
 };
 
-export const PreviewModal = ({ isOpen, onClose, blocks }: PreviewModalProps) => {
+export const PreviewModal = ({ isOpen, onClose, blocks, isDarkTheme = false }: PreviewModalProps) => {
   const [viewport, setViewport] = useState<ViewportSize>('desktop');
 
   return (
@@ -68,7 +69,7 @@ export const PreviewModal = ({ isOpen, onClose, blocks }: PreviewModalProps) => 
             <div className="flex-1 overflow-auto p-8 flex justify-center">
               <motion.div
                 layout
-                className={`${viewportSizes[viewport]} bg-white rounded-lg shadow-2xl overflow-hidden transition-all duration-300`}
+                className={`${viewportSizes[viewport]} ${isDarkTheme ? 'bg-slate-900' : 'bg-white'} rounded-lg shadow-2xl overflow-hidden transition-all duration-300`}
               >
                 {blocks.length === 0 ? (
                   <div className="p-12 text-center text-slate-500">
@@ -81,6 +82,7 @@ export const PreviewModal = ({ isOpen, onClose, blocks }: PreviewModalProps) => 
                       block={block}
                       onUpdate={() => {}}
                       isPreview
+                      isDarkTheme={isDarkTheme}
                     />
                   ))
                 )}

@@ -11,7 +11,11 @@ import {
   HelpCircle,
   GripVertical,
   Menu,
-  SunMoon
+  SunMoon,
+  LayoutTemplate,
+  Images,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 const iconMap: Record<string, React.ElementType> = {
@@ -24,19 +28,38 @@ const iconMap: Record<string, React.ElementType> = {
   HelpCircle,
   Menu,
   SunMoon,
+  LayoutTemplate,
+  Images,
 };
 
 interface DraggableItemProps {
   template: ComponentTemplate;
+  isCollapsed: boolean;
 }
 
-const DraggableItem = ({ template }: DraggableItemProps) => {
+const DraggableItem = ({ template, isCollapsed }: DraggableItemProps) => {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `template-${template.type}`,
     data: { template },
   });
 
   const Icon = iconMap[template.icon] || Sparkles;
+
+  if (isCollapsed) {
+    return (
+      <div
+        ref={setNodeRef}
+        {...listeners}
+        {...attributes}
+        className={`flex items-center justify-center p-3 rounded-lg transition-all duration-200 hover:bg-secondary cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-50' : ''}`}
+        title={template.label}
+      >
+        <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+          <Icon className="w-5 h-5 text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -57,16 +80,36 @@ const DraggableItem = ({ template }: DraggableItemProps) => {
   );
 };
 
-export const ComponentSidebar = () => {
+interface ComponentSidebarProps {
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
+}
+
+export const ComponentSidebar = ({ isCollapsed, onToggleCollapse }: ComponentSidebarProps) => {
   return (
-    <aside className="w-[280px] bg-sidebar border-r border-sidebar-border flex flex-col h-full">
-      <div className="p-4 border-b border-sidebar-border">
-        <h2 className="font-semibold text-lg text-foreground">Components</h2>
-        <p className="text-xs text-muted-foreground mt-1">Drag to add to canvas</p>
+    <aside className={`${isCollapsed ? 'w-[80px]' : 'w-[280px]'} bg-sidebar border-r border-sidebar-border flex flex-col h-full transition-all duration-300`}>
+      <div className="p-4 border-b border-sidebar-border flex items-center justify-between">
+        {!isCollapsed && (
+          <div>
+            <h2 className="font-semibold text-lg text-foreground">Components</h2>
+            <p className="text-xs text-muted-foreground mt-1">Drag to add to canvas</p>
+          </div>
+        )}
+        <button
+          onClick={onToggleCollapse}
+          className="p-2 hover:bg-secondary rounded-lg transition-colors ml-auto"
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          ) : (
+            <ChevronLeft className="w-4 h-4 text-muted-foreground" />
+          )}
+        </button>
       </div>
-      <div className="flex-1 overflow-y-auto p-3 space-y-1">
+      <div className={`flex-1 overflow-y-auto p-3 ${isCollapsed ? 'space-y-2' : 'space-y-1'}`}>
         {componentTemplates.map((template) => (
-          <DraggableItem key={template.type} template={template} />
+          <DraggableItem key={template.type} template={template} isCollapsed={isCollapsed} />
         ))}
       </div>
     </aside>

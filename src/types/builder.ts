@@ -7,7 +7,9 @@ export type ComponentType =
   | 'cta'
   | 'contact'
   | 'pricing'
-  | 'faq';
+  | 'faq'
+  | 'footer'
+  | 'imageGallery';
 
 export interface ComponentBlock {
   id: string;
