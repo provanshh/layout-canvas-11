@@ -5,7 +5,7 @@ interface EditableTextProps {
   onChange: (value: string) => void;
   onRemove?: () => void;
   className?: string;
-  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span';
   isPreview?: boolean;
   enableLink?: boolean;
   link?: string;

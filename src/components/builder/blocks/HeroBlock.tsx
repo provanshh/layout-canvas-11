@@ -1,17 +1,8 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
 import { EditableButton } from '../EditableButton';
-import { TextEditConfig, ButtonEditConfig } from '../types';
 
-interface HeroBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-  onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
-  onEditText?: (textId: string, config: TextEditConfig) => void;
-}
-
-export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText }: HeroBlockProps) => {
+export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText }: BaseBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -39,45 +30,6 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText
     borderRadius: parseInt(content.secondaryButtonBorderRadius || '8'),
     link: content.secondaryButtonLink || '',
     openInNewTab: content.secondaryButtonOpenInNewTab === 'true',
-  };
-
-  const handlePrimaryClick = () => {
-    if (onEditButton) {
-      onEditButton(`${block.id}-primary`, {
-        ...primaryBtn,
-        onTextChange: (v: string) => updateField('buttonText', v),
-        onBgColorChange: (v: string) => updateField('buttonBgColor', v),
-        onTextColorChange: (v: string) => updateField('buttonTextColor', v),
-        onPaddingXChange: (v: number) => updateField('buttonPaddingX', v.toString()),
-        onPaddingYChange: (v: number) => updateField('buttonPaddingY', v.toString()),
-        onBorderRadiusChange: (v: number) => updateField('buttonBorderRadius', v.toString()),
-        onLinkChange: (v: string) => updateField('buttonLink', v),
-        onOpenInNewTabChange: (v: boolean) => updateField('buttonOpenInNewTab', v.toString()),
-      });
-    }
-  };
-
-  const handleSecondaryClick = () => {
-    if (onEditButton) {
-      onEditButton(`${block.id}-secondary`, {
-        text: secondaryBtn.text,
-        bgColor: secondaryBtn.bgColor,
-        textColor: secondaryBtn.textColor,
-        paddingX: secondaryBtn.paddingX,
-        paddingY: secondaryBtn.paddingY,
-        borderRadius: secondaryBtn.borderRadius,
-        link: secondaryBtn.link,
-        openInNewTab: secondaryBtn.openInNewTab,
-        onTextChange: (v: string) => updateField('buttonSecondary', v),
-        onBgColorChange: (v: string) => updateField('secondaryButtonBgColor', v),
-        onTextColorChange: (v: string) => updateField('secondaryButtonTextColor', v),
-        onPaddingXChange: (v: number) => updateField('secondaryButtonPaddingX', v.toString()),
-        onPaddingYChange: (v: number) => updateField('secondaryButtonPaddingY', v.toString()),
-        onBorderRadiusChange: (v: number) => updateField('secondaryButtonBorderRadius', v.toString()),
-        onLinkChange: (v: string) => updateField('secondaryButtonLink', v),
-        onOpenInNewTabChange: (v: boolean) => updateField('secondaryButtonOpenInNewTab', v.toString()),
-      });
-    }
   };
 
   if (isPreview) {
@@ -114,7 +66,7 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText
     };
 
     return (
-      <section className="py-20 px-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+      <div className="py-20 px-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 
             className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
@@ -133,12 +85,12 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText
             {renderButton(secondaryBtn as any, true)}
           </div>
         </div>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="py-20 px-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="max-w-4xl mx-auto text-center">
         <EditableText
           as="h1"
@@ -169,27 +121,44 @@ export const HeroBlock = ({ block, onUpdate, isPreview, onEditButton, onEditText
             paddingX={primaryBtn.paddingX}
             paddingY={primaryBtn.paddingY}
             borderRadius={primaryBtn.borderRadius}
-            onClick={handlePrimaryClick}
+            link={primaryBtn.link}
+            openInNewTab={primaryBtn.openInNewTab}
+            isPreview={isPreview}
+            onEditButton={onEditButton}
+            buttonId={`${block.id}-primary`}
+            onTextChange={(v) => updateField('buttonText', v)}
+            onBgColorChange={(v) => updateField('buttonBgColor', v)}
+            onTextColorChange={(v) => updateField('buttonTextColor', v)}
+            onPaddingXChange={(v) => updateField('buttonPaddingX', v.toString())}
+            onPaddingYChange={(v) => updateField('buttonPaddingY', v.toString())}
+            onBorderRadiusChange={(v) => updateField('buttonBorderRadius', v.toString())}
+            onLinkChange={(v) => updateField('buttonLink', v)}
+            onOpenInNewTabChange={(v) => updateField('buttonOpenInNewTab', v.toString())}
           />
-          <button
-            onClick={handleSecondaryClick}
-            className="font-semibold transition-all hover:opacity-80 cursor-pointer ring-2 ring-transparent hover:ring-primary/30"
-            style={{
-              backgroundColor: secondaryBtn.bgColor,
-              color: secondaryBtn.textColor,
-              border: `1px solid ${secondaryBtn.borderColor}`,
-              paddingLeft: `${secondaryBtn.paddingX}px`,
-              paddingRight: `${secondaryBtn.paddingX}px`,
-              paddingTop: `${secondaryBtn.paddingY}px`,
-              paddingBottom: `${secondaryBtn.paddingY}px`,
-              borderRadius: `${secondaryBtn.borderRadius}px`,
-            }}
-            title="Click to edit button"
-          >
-            {secondaryBtn.text}
-          </button>
+          <EditableButton
+            text={secondaryBtn.text}
+            bgColor={secondaryBtn.bgColor}
+            textColor={secondaryBtn.textColor}
+            paddingX={secondaryBtn.paddingX}
+            paddingY={secondaryBtn.paddingY}
+            borderRadius={secondaryBtn.borderRadius}
+            link={secondaryBtn.link}
+            openInNewTab={secondaryBtn.openInNewTab}
+            isPreview={isPreview}
+            onEditButton={onEditButton}
+            buttonId={`${block.id}-secondary`}
+            className="border"
+            onTextChange={(v) => updateField('buttonSecondary', v)}
+            onBgColorChange={(v) => updateField('secondaryButtonBgColor', v)}
+            onTextColorChange={(v) => updateField('secondaryButtonTextColor', v)}
+            onPaddingXChange={(v) => updateField('secondaryButtonPaddingX', v.toString())}
+            onPaddingYChange={(v) => updateField('secondaryButtonPaddingY', v.toString())}
+            onBorderRadiusChange={(v) => updateField('secondaryButtonBorderRadius', v.toString())}
+            onLinkChange={(v) => updateField('secondaryButtonLink', v)}
+            onOpenInNewTabChange={(v) => updateField('secondaryButtonOpenInNewTab', v.toString())}
+          />
         </div>
       </div>
-    </section>
+    </div>
   );
 };

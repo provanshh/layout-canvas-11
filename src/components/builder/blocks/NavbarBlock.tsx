@@ -1,19 +1,19 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
+import { EditableButton } from '../EditableButton';
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
 
-interface NavbarBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-}
-
-export const NavbarBlock = ({ block, onUpdate, isPreview }: NavbarBlockProps) => {
+export const NavbarBlock = ({ 
+  block, 
+  onUpdate, 
+  isPreview,
+  onEditButton,
+  onEditText 
+}: BaseBlockProps) => {
   const { content } = block;
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
 
-  // Get all nav links from content
   const getNavLinks = () => {
     const links: { label: string; href: string }[] = [];
     let i = 1;
@@ -44,11 +44,9 @@ export const NavbarBlock = ({ block, onUpdate, isPreview }: NavbarBlockProps) =>
 
   const removeNavLink = (index: number) => {
     const newContent = { ...content };
-    // Remove the link at the given index
     delete newContent[`navLink${index}Label`];
     delete newContent[`navLink${index}Href`];
 
-    // Reindex all links after this one
     const links = getNavLinks();
     for (let i = index; i < links.length; i++) {
       if (newContent[`navLink${i + 1}Label`]) {
@@ -68,12 +66,7 @@ export const NavbarBlock = ({ block, onUpdate, isPreview }: NavbarBlockProps) =>
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center">
             <span className="font-bold text-slate-900 text-sm">
-              <EditableText
-                value={content.logoText?.charAt(0) || 'L'}
-                onChange={(val) => handleUpdateField('logoText', val + (content.logoText?.slice(1) || 'ogo'))}
-                className="text-slate-900"
-                isPreview={isPreview}
-              />
+              {(content.logoText || 'L').charAt(0)}
             </span>
           </div>
           <EditableText
@@ -81,6 +74,8 @@ export const NavbarBlock = ({ block, onUpdate, isPreview }: NavbarBlockProps) =>
             onChange={(val) => handleUpdateField('logoText', val)}
             className="font-bold text-lg"
             isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-logoText`}
           />
         </div>
 
@@ -97,6 +92,8 @@ export const NavbarBlock = ({ block, onUpdate, isPreview }: NavbarBlockProps) =>
                 onChange={(val) => handleUpdateField(`navLink${idx + 1}Label`, val)}
                 className="text-slate-300 hover:text-white transition-colors cursor-pointer"
                 isPreview={isPreview}
+                onEditText={onEditText}
+                textId={`${block.id}-navLink${idx + 1}`}
               />
               {!isPreview && hoveredLink === idx && (
                 <button
@@ -121,11 +118,19 @@ export const NavbarBlock = ({ block, onUpdate, isPreview }: NavbarBlockProps) =>
         </div>
 
         <div className="flex items-center gap-3">
-          <EditableText
-            value={content.ctaText || 'Get Started'}
-            onChange={(val) => handleUpdateField('ctaText', val)}
-            className="px-4 py-2 bg-cyan-500 text-slate-900 font-medium rounded-lg hover:bg-cyan-400 transition-colors"
+          <EditableButton
+            text={content.ctaText || 'Get Started'}
+            bgColor={content.ctaColor || '#06b6d4'}
+            textColor={content.ctaTextColor || '#0f172a'}
+            link={content.ctaLink || '#'}
+            className="px-4 py-2 rounded-lg font-medium"
             isPreview={isPreview}
+            onEditButton={onEditButton}
+            buttonId={`${block.id}-cta-btn`}
+            onTextChange={(v) => handleUpdateField('ctaText', v)}
+            onBgColorChange={(v) => handleUpdateField('ctaColor', v)}
+            onTextColorChange={(v) => handleUpdateField('ctaTextColor', v)}
+            onLinkChange={(v) => handleUpdateField('ctaLink', v)}
           />
         </div>
       </div>

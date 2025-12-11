@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -26,11 +26,34 @@ import { TextEditPanel } from '@/components/builder/TextEditPanel';
 import { ImageEditPanel } from '@/components/builder/ImageEditPanel';
 import { useBuilderHistory } from '@/hooks/useBuilderHistory';
 import { ButtonEditConfig, TextEditConfig, ImageEditConfig } from '@/components/builder/types';
+import { toast } from 'sonner';
+
+const STORAGE_KEY = 'builder-blocks';
 
 const generateId = () => `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
+const loadFromStorage = (): ComponentBlock[] => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (e) {
+    console.error('Failed to load from localStorage:', e);
+  }
+  return [];
+};
+
+const saveToStorage = (blocks: ComponentBlock[]) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(blocks));
+  } catch (e) {
+    console.error('Failed to save to localStorage:', e);
+  }
+};
+
 const Index = () => {
-  const { blocks, setBlocks, undo, redo, canUndo, canRedo } = useBuilderHistory([]);
+  const { blocks, setBlocks, undo, redo, canUndo, canRedo } = useBuilderHistory(loadFromStorage());
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -50,6 +73,11 @@ const Index = () => {
   const [textEditConfig, setTextEditConfig] = useState<TextEditConfig | null>(null);
   const [showImagePanel, setShowImagePanel] = useState(false);
   const [imageEditConfig, setImageEditConfig] = useState<ImageEditConfig | null>(null);
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    saveToStorage(blocks);
+  }, [blocks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -79,8 +107,8 @@ const Index = () => {
           type: template.type,
           content: { ...template.defaultContent },
           styles: {
-            paddingTop: '48',
-            paddingBottom: '48',
+            paddingTop: '0',
+            paddingBottom: '0',
             marginTop: '0',
             marginBottom: '0',
           },
@@ -93,12 +121,14 @@ const Index = () => {
             const newBlocks = [...blocks];
             newBlocks.splice(overIndex, 0, newBlock);
             setBlocks(newBlocks);
+            toast.success('Component added');
             return;
           }
         }
         
         // Otherwise append to the end
         setBlocks([...blocks, newBlock]);
+        toast.success('Component added');
       }
       return;
     }
@@ -148,13 +178,13 @@ const Index = () => {
         setShowStylePanel(false);
         setStylePanelBlockId(null);
       }
+      toast.success('Block deleted');
     },
     [blocks, setBlocks, selectedBlockId, stylePanelBlockId]
   );
 
   const handleOpenStylePanel = (id: string) => {
     setStylePanelBlockId(id);
-    setShowStylePanel(true);
     setSelectedBlockId(id);
     closeAllPanels();
     setShowStylePanel(true);
@@ -174,6 +204,7 @@ const Index = () => {
 
   const handleSelectTemplate = (newBlocks: ComponentBlock[]) => {
     setBlocks(newBlocks);
+    toast.success('Template loaded');
   };
 
   const closeAllPanels = () => {
@@ -184,25 +215,19 @@ const Index = () => {
   };
 
   const handleEditButton = useCallback((buttonId: string, config: ButtonEditConfig) => {
-    setShowTextPanel(false);
-    setShowImagePanel(false);
-    setShowStylePanel(false);
+    closeAllPanels();
     setButtonEditConfig(config);
     setShowButtonPanel(true);
   }, []);
 
   const handleEditText = useCallback((textId: string, config: TextEditConfig) => {
-    setShowButtonPanel(false);
-    setShowImagePanel(false);
-    setShowStylePanel(false);
+    closeAllPanels();
     setTextEditConfig(config);
     setShowTextPanel(true);
   }, []);
 
   const handleEditImage = useCallback((imageId: string, config: ImageEditConfig) => {
-    setShowButtonPanel(false);
-    setShowTextPanel(false);
-    setShowStylePanel(false);
+    closeAllPanels();
     setImageEditConfig(config);
     setShowImagePanel(true);
   }, []);

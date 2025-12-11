@@ -1,16 +1,8 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
-import { TextEditConfig } from '../types';
 import { Zap, Smartphone, MousePointer } from 'lucide-react';
 
-interface FeaturesBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-  onEditText?: (textId: string, config: TextEditConfig) => void;
-}
-
-export const FeaturesBlock = ({ block, onUpdate, isPreview, onEditText }: FeaturesBlockProps) => {
+export const FeaturesBlock = ({ block, onUpdate, isPreview, onEditText }: BaseBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -73,7 +65,7 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview, onEditText }: Featur
   );
 
   return (
-    <section className="py-16 px-6 bg-slate-50">
+    <div className="py-16 px-6 bg-slate-50">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           {isPreview ? (
@@ -123,6 +115,6 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview, onEditText }: Featur
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

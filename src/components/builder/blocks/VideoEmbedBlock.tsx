@@ -1,12 +1,6 @@
-import { ComponentBlock } from '@/types/builder';
+import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
 import { Video } from 'lucide-react';
-
-interface VideoEmbedBlockProps {
-  block: ComponentBlock;
-  onUpdate: (content: Record<string, string>) => void;
-  isPreview?: boolean;
-}
 
 const getEmbedUrl = (url: string): string => {
   // YouTube
@@ -24,7 +18,7 @@ const getEmbedUrl = (url: string): string => {
   return url;
 };
 
-export const VideoEmbedBlock = ({ block, onUpdate, isPreview }: VideoEmbedBlockProps) => {
+export const VideoEmbedBlock = ({ block, onUpdate, isPreview, onEditText }: BaseBlockProps) => {
   const { content } = block;
 
   const updateField = (field: string, value: string) => {
@@ -35,30 +29,27 @@ export const VideoEmbedBlock = ({ block, onUpdate, isPreview }: VideoEmbedBlockP
   const hasValidUrl = embedUrl && embedUrl !== content.videoUrl;
 
   return (
-    <section className="py-16 px-6 bg-background">
+    <div className="py-16 px-6 bg-background">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          {isPreview ? (
-            <>
-              <h2 className="text-3xl font-bold text-foreground mb-2">{content.title}</h2>
-              <p className="text-muted-foreground">{content.subtitle}</p>
-            </>
-          ) : (
-            <>
-              <EditableText
-                as="h2"
-                value={content.title}
-                onChange={(v) => updateField('title', v)}
-                className="text-3xl font-bold text-foreground mb-2"
-              />
-              <EditableText
-                as="p"
-                value={content.subtitle}
-                onChange={(v) => updateField('subtitle', v)}
-                className="text-muted-foreground"
-              />
-            </>
-          )}
+          <EditableText
+            as="h2"
+            value={content.title}
+            onChange={(v) => updateField('title', v)}
+            className="text-3xl font-bold text-foreground mb-2"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-title`}
+          />
+          <EditableText
+            as="p"
+            value={content.subtitle}
+            onChange={(v) => updateField('subtitle', v)}
+            className="text-muted-foreground block"
+            isPreview={isPreview}
+            onEditText={onEditText}
+            textId={`${block.id}-subtitle`}
+          />
         </div>
         
         <div className="aspect-video rounded-xl overflow-hidden bg-muted">
@@ -91,19 +82,18 @@ export const VideoEmbedBlock = ({ block, onUpdate, isPreview }: VideoEmbedBlockP
         
         {content.caption && (
           <div className="text-center mt-4">
-            {isPreview ? (
-              <p className="text-sm text-muted-foreground">{content.caption}</p>
-            ) : (
-              <EditableText
-                as="p"
-                value={content.caption}
-                onChange={(v) => updateField('caption', v)}
-                className="text-sm text-muted-foreground"
-              />
-            )}
+            <EditableText
+              as="p"
+              value={content.caption}
+              onChange={(v) => updateField('caption', v)}
+              className="text-sm text-muted-foreground"
+              isPreview={isPreview}
+              onEditText={onEditText}
+              textId={`${block.id}-caption`}
+            />
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
