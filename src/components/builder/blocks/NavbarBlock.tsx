@@ -4,16 +4,23 @@ import { EditableButton } from '../EditableButton';
 import { Plus, X, Menu } from 'lucide-react';
 import { useState } from 'react';
 
+interface NavbarBlockProps extends BaseBlockProps {
+  forceMobileView?: boolean;
+}
+
 export const NavbarBlock = ({ 
   block, 
   onUpdate, 
   isPreview,
   onEditButton,
-  onEditText 
-}: BaseBlockProps) => {
+  onEditText,
+  forceMobileView = false
+}: NavbarBlockProps) => {
   const { content } = block;
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const isMobile = forceMobileView;
 
   const getNavLinks = () => {
     const links: { label: string; href: string }[] = [];
@@ -82,68 +89,72 @@ export const NavbarBlock = ({
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((link, idx) => (
-            <div
-              key={idx}
-              className="relative flex items-center gap-1"
-              onMouseEnter={() => setHoveredLink(idx)}
-              onMouseLeave={() => setHoveredLink(null)}
-            >
-              <EditableText
-                value={link.label}
-                onChange={(val) => handleUpdateField(`navLink${idx + 1}Label`, val)}
-                className="text-slate-300 hover:text-white transition-colors cursor-pointer"
-                isPreview={isPreview}
-                onEditText={onEditText}
-                textId={`${block.id}-navLink${idx + 1}`}
-              />
-              {!isPreview && hoveredLink === idx && (
-                <button
-                  onClick={() => removeNavLink(idx + 1)}
-                  className="absolute -top-2 -right-3 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              )}
-            </div>
-          ))}
+        {!isMobile && (
+          <div className="hidden md:flex items-center gap-6">
+            {navLinks.map((link, idx) => (
+              <div
+                key={idx}
+                className="relative flex items-center gap-1"
+                onMouseEnter={() => setHoveredLink(idx)}
+                onMouseLeave={() => setHoveredLink(null)}
+              >
+                <EditableText
+                  value={link.label}
+                  onChange={(val) => handleUpdateField(`navLink${idx + 1}Label`, val)}
+                  className="text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  isPreview={isPreview}
+                  onEditText={onEditText}
+                  textId={`${block.id}-navLink${idx + 1}`}
+                />
+                {!isPreview && hoveredLink === idx && (
+                  <button
+                    onClick={() => removeNavLink(idx + 1)}
+                    className="absolute -top-2 -right-3 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            ))}
 
-          {!isPreview && (
-            <button
-              onClick={addNavLink}
-              className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center hover:bg-cyan-500/30 transition-colors"
-              title="Add nav link"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          )}
-        </div>
+            {!isPreview && (
+              <button
+                onClick={addNavLink}
+                className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center hover:bg-cyan-500/30 transition-colors"
+                title="Add nav link"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Desktop CTA + Mobile Hamburger */}
         <div className="flex items-center gap-3">
           {/* Desktop CTA */}
-          <div className="hidden md:block">
-            <EditableButton
-              text={content.ctaText || 'Get Started'}
-              bgColor={content.ctaColor || '#06b6d4'}
-              textColor={content.ctaTextColor || '#0f172a'}
-              link={content.ctaLink || '#'}
-              className="px-4 py-2 rounded-lg font-medium"
-              isPreview={isPreview}
-              onEditButton={onEditButton}
-              buttonId={`${block.id}-cta-btn`}
-              onTextChange={(v) => handleUpdateField('ctaText', v)}
-              onBgColorChange={(v) => handleUpdateField('ctaColor', v)}
-              onTextColorChange={(v) => handleUpdateField('ctaTextColor', v)}
-              onLinkChange={(v) => handleUpdateField('ctaLink', v)}
-            />
-          </div>
+          {!isMobile && (
+            <div className="hidden md:block">
+              <EditableButton
+                text={content.ctaText || 'Get Started'}
+                bgColor={content.ctaColor || '#06b6d4'}
+                textColor={content.ctaTextColor || '#0f172a'}
+                link={content.ctaLink || '#'}
+                className="px-4 py-2 rounded-lg font-medium"
+                isPreview={isPreview}
+                onEditButton={onEditButton}
+                buttonId={`${block.id}-cta-btn`}
+                onTextChange={(v) => handleUpdateField('ctaText', v)}
+                onBgColorChange={(v) => handleUpdateField('ctaColor', v)}
+                onTextColorChange={(v) => handleUpdateField('ctaTextColor', v)}
+                onLinkChange={(v) => handleUpdateField('ctaLink', v)}
+              />
+            </div>
+          )}
 
           {/* Mobile Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-slate-800 transition-colors"
+            className={`${isMobile ? 'flex' : 'md:hidden'} p-2 rounded-lg hover:bg-slate-800 transition-colors`}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -152,7 +163,7 @@ export const NavbarBlock = ({
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden mt-4 pt-4 border-t border-slate-700">
+        <div className={`${isMobile ? 'block' : 'md:hidden'} mt-4 pt-4 border-t border-slate-700`}>
           <div className="flex flex-col gap-3">
             {navLinks.map((link, idx) => (
               <a

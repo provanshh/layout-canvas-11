@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ComponentBlock, BlockStyles } from '@/types/builder';
-import { X, Paintbrush, Type, Move, Image, Layers, Plus, Trash2, MousePointer, ChevronDown, ChevronRight } from 'lucide-react';
+import { X, Paintbrush, Type, Move, Image, Layers, Plus, Trash2, MousePointer, ChevronDown, ChevronRight, Upload } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -399,29 +399,54 @@ export const SectionEditorPanel = ({ block, onUpdateContent, onUpdateStyles, onC
           {/* Images Section */}
           {imageFields.length > 0 && (
             <SectionGroup title="Images" icon={Image} defaultOpen={true}>
-              {imageFields.map(field => (
-                <div key={field.key} className="space-y-2">
-                  <label className="text-xs text-muted-foreground">{field.label}</label>
-                  <Input
-                    value={content[field.key] || ''}
-                    onChange={(e) => handleContentChange(field.key, e.target.value)}
-                    className="h-8 text-xs"
-                    placeholder="Image URL"
-                  />
-                  {content[field.key] && (
-                    <div className="relative aspect-video bg-secondary rounded-lg overflow-hidden">
-                      <img 
-                        src={content[field.key]} 
-                        alt="Preview" 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x200?text=Invalid+URL';
-                        }}
-                      />
+              {imageFields.map(field => {
+                const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      handleContentChange(field.key, reader.result as string);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                };
+
+                return (
+                  <div key={field.key} className="space-y-2">
+                    <label className="text-xs text-muted-foreground">{field.label}</label>
+                    <Input
+                      value={content[field.key] || ''}
+                      onChange={(e) => handleContentChange(field.key, e.target.value)}
+                      className="h-8 text-xs"
+                      placeholder="Image URL"
+                    />
+                    <div className="flex gap-2">
+                      <label className="flex-1 flex items-center justify-center gap-2 h-8 px-3 rounded-md border border-dashed border-border hover:border-primary hover:bg-primary/5 cursor-pointer transition-colors">
+                        <Upload className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">Upload from device</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                        />
+                      </label>
                     </div>
-                  )}
-                </div>
-              ))}
+                    {content[field.key] && (
+                      <div className="relative aspect-video bg-secondary rounded-lg overflow-hidden">
+                        <img 
+                          src={content[field.key]} 
+                          alt="Preview" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x200?text=Invalid+URL';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </SectionGroup>
           )}
 

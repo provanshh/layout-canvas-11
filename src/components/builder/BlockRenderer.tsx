@@ -28,6 +28,7 @@ interface BlockRendererProps {
   onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
   onEditText?: (textId: string, config: TextEditConfig) => void;
   onEditImage?: (imageId: string, config: ImageEditConfig) => void;
+  forceMobileView?: boolean;
 }
 
 export const BlockRenderer = ({ 
@@ -39,6 +40,7 @@ export const BlockRenderer = ({
   onEditButton,
   onEditText,
   onEditImage,
+  forceMobileView,
 }: BlockRendererProps) => {
   const blockComponents: Record<string, React.ComponentType<any>> = {
     navbar: NavbarBlock,
@@ -89,6 +91,7 @@ export const BlockRenderer = ({
         onEditButton={onEditButton}
         onEditText={onEditText}
         onEditImage={onEditImage}
+        forceMobileView={forceMobileView}
       />
     </div>
   );

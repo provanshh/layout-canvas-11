@@ -91,6 +91,7 @@ export const PreviewModal = ({ isOpen, onClose, blocks, isDarkTheme = false }: P
                         onUpdate={() => {}}
                         isPreview
                         isDarkTheme={isDarkTheme}
+                        forceMobileView={viewport === 'mobile'}
                       />
                     ))}
                   </div>
