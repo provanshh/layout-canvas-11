@@ -156,6 +156,28 @@
     box-shadow: var(--glow-primary);
   }
 
+  /* Mac-style minimalist buttons */
+  .mac-button {
+    @apply flex items-center justify-center w-7 h-7 rounded-md;
+    @apply text-muted-foreground bg-transparent;
+    @apply hover:bg-muted/60 hover:text-foreground;
+    @apply transition-all duration-150 ease-out;
+  }
+
+  .mac-button-text {
+    @apply flex items-center gap-1.5 px-2.5 h-7 rounded-md;
+    @apply text-xs font-medium text-muted-foreground bg-transparent;
+    @apply hover:bg-muted/60 hover:text-foreground;
+    @apply transition-all duration-150 ease-out;
+  }
+
+  .mac-button-primary {
+    @apply flex items-center gap-1.5 px-3 h-7 rounded-md;
+    @apply text-xs font-medium;
+    @apply bg-primary/90 text-primary-foreground;
+    @apply hover:bg-primary transition-all duration-150 ease-out;
+  }
+
   .preview-section {
     @apply bg-canvas rounded-lg overflow-hidden;
   }
