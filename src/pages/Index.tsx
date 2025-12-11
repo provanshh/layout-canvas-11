@@ -70,8 +70,7 @@ const Index = () => {
     const { active, over } = event;
     setActiveId(null);
 
-    if (!over) return;
-
+    // Handle dropping a new template from sidebar
     if (active.id.toString().startsWith('template-')) {
       const template = active.data.current?.template as ComponentTemplate;
       if (template) {
@@ -81,17 +80,25 @@ const Index = () => {
           content: { ...template.defaultContent },
         };
 
-        const overIndex = blocks.findIndex((b) => b.id === over.id);
-        const insertIndex = overIndex >= 0 ? overIndex : blocks.length;
+        // If dropped over an existing block, insert at that position
+        if (over && over.id !== 'canvas') {
+          const overIndex = blocks.findIndex((b) => b.id === over.id);
+          if (overIndex >= 0) {
+            const newBlocks = [...blocks];
+            newBlocks.splice(overIndex, 0, newBlock);
+            setBlocks(newBlocks);
+            return;
+          }
+        }
         
-        const newBlocks = [...blocks];
-        newBlocks.splice(insertIndex, 0, newBlock);
-        setBlocks(newBlocks);
+        // Otherwise append to the end
+        setBlocks([...blocks, newBlock]);
       }
       return;
     }
 
-    if (active.id !== over.id) {
+    // Handle reordering existing blocks
+    if (over && active.id !== over.id) {
       const oldIndex = blocks.findIndex((b) => b.id === active.id);
       const newIndex = blocks.findIndex((b) => b.id === over.id);
       
