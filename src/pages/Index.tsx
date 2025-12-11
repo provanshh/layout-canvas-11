@@ -20,6 +20,7 @@ import { PreviewModal } from '@/components/builder/PreviewModal';
 import { ExportModal } from '@/components/builder/ExportModal';
 import { StylePanel } from '@/components/builder/StylePanel';
 import { LayoutOverviewModal } from '@/components/builder/LayoutOverviewModal';
+import { TemplatesModal } from '@/components/builder/TemplatesModal';
 import { useBuilderHistory } from '@/hooks/useBuilderHistory';
 
 const generateId = () => `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -36,6 +37,7 @@ const Index = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false); // Preview/website theme
   const [isEditorDark, setIsEditorDark] = useState(false); // Editor UI theme
   const [showLayoutOverview, setShowLayoutOverview] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -134,7 +136,11 @@ const Index = () => {
     setBlocks(newBlocks);
   };
 
-  const selectedBlock = stylePanelBlockId 
+  const handleSelectTemplate = (newBlocks: ComponentBlock[]) => {
+    setBlocks(newBlocks);
+  };
+
+  const selectedBlock = stylePanelBlockId
     ? blocks.find(b => b.id === stylePanelBlockId) || null 
     : null;
 
@@ -152,6 +158,7 @@ const Index = () => {
           isDarkTheme={isEditorDark}
           onToggleTheme={handleToggleEditorTheme}
           onOpenLayoutOverview={() => setShowLayoutOverview(true)}
+          onOpenTemplates={() => setShowTemplates(true)}
         />
       
       <div className="flex-1 flex overflow-hidden">
@@ -219,6 +226,12 @@ const Index = () => {
         blocks={blocks}
         onReorder={handleReorderBlocks}
         onDelete={handleDeleteBlock}
+      />
+
+      <TemplatesModal
+        isOpen={showTemplates}
+        onClose={() => setShowTemplates(false)}
+        onSelectTemplate={handleSelectTemplate}
       />
       </div>
     </div>

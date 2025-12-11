@@ -1,4 +1,4 @@
-import { Eye, Download, Undo, Redo, Layers, Sun, Moon } from 'lucide-react';
+import { Eye, Download, Undo, Redo, Layers, Sun, Moon, LayoutTemplate } from 'lucide-react';
 
 interface BuilderToolbarProps {
   onPreview: () => void;
@@ -11,6 +11,7 @@ interface BuilderToolbarProps {
   isDarkTheme: boolean;
   onToggleTheme: () => void;
   onOpenLayoutOverview: () => void;
+  onOpenTemplates: () => void;
 }
 
 export const BuilderToolbar = ({
@@ -24,6 +25,7 @@ export const BuilderToolbar = ({
   isDarkTheme,
   onToggleTheme,
   onOpenLayoutOverview,
+  onOpenTemplates,
 }: BuilderToolbarProps) => {
   return (
     <header className="h-12 bg-card/80 backdrop-blur-sm border-b border-border/50 flex items-center justify-between px-4">
@@ -34,6 +36,14 @@ export const BuilderToolbar = ({
           </div>
           <span className="font-medium text-sm text-foreground">LayoutBuilder</span>
         </div>
+        <div className="h-4 w-px bg-border/50" />
+        <button
+          onClick={onOpenTemplates}
+          className="mac-button-text text-xs"
+        >
+          <LayoutTemplate className="w-3.5 h-3.5" />
+          <span>Templates</span>
+        </button>
         <div className="h-4 w-px bg-border/50" />
         <button
           onClick={onOpenLayoutOverview}
