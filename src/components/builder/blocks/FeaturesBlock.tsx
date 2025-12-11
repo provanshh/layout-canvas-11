@@ -16,20 +16,31 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
   };
 
   const features = [
-    { icon: Zap, titleKey: 'feature1Title', descKey: 'feature1Desc' },
-    { icon: Smartphone, titleKey: 'feature2Title', descKey: 'feature2Desc' },
-    { icon: MousePointer, titleKey: 'feature3Title', descKey: 'feature3Desc' },
+    { icon: Zap, titleKey: 'feature1Title', descKey: 'feature1Desc', titleColorKey: 'feature1TitleColor', descColorKey: 'feature1DescColor' },
+    { icon: Smartphone, titleKey: 'feature2Title', descKey: 'feature2Desc', titleColorKey: 'feature2TitleColor', descColorKey: 'feature2DescColor' },
+    { icon: MousePointer, titleKey: 'feature3Title', descKey: 'feature3Desc', titleColorKey: 'feature3TitleColor', descColorKey: 'feature3DescColor' },
   ];
 
-  const FeatureCard = ({ icon: Icon, titleKey, descKey }: { icon: typeof Zap; titleKey: string; descKey: string }) => (
+  const FeatureCard = ({ icon: Icon, titleKey, descKey, titleColorKey, descColorKey }: { 
+    icon: typeof Zap; 
+    titleKey: string; 
+    descKey: string;
+    titleColorKey: string;
+    descColorKey: string;
+  }) => (
     <div className="p-6 bg-white rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
       <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-4">
         <Icon className="w-6 h-6 text-cyan-600" />
       </div>
       {isPreview ? (
         <>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">{content[titleKey]}</h3>
-          <p className="text-slate-600">{content[descKey]}</p>
+          <h3 
+            className="text-lg font-semibold mb-2"
+            style={{ color: content[titleColorKey] || '#0f172a' }}
+          >
+            {content[titleKey]}
+          </h3>
+          <p style={{ color: content[descColorKey] || '#475569' }}>{content[descKey]}</p>
         </>
       ) : (
         <>
@@ -37,13 +48,17 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
             as="h3"
             value={content[titleKey]}
             onChange={(v) => updateField(titleKey, v)}
-            className="text-lg font-semibold text-slate-900 mb-2"
+            color={content[titleColorKey] || '#0f172a'}
+            onColorChange={(c) => updateField(titleColorKey, c)}
+            className="text-lg font-semibold mb-2"
           />
           <EditableText
             as="p"
             value={content[descKey]}
             onChange={(v) => updateField(descKey, v)}
-            className="text-slate-600 block"
+            color={content[descColorKey] || '#475569'}
+            onColorChange={(c) => updateField(descColorKey, c)}
+            className="block"
           />
         </>
       )}
@@ -56,8 +71,18 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
         <div className="text-center mb-12">
           {isPreview ? (
             <>
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">{content.title}</h2>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto">{content.subtitle}</p>
+              <h2 
+                className="text-3xl font-bold mb-4"
+                style={{ color: content.titleColor || '#0f172a' }}
+              >
+                {content.title}
+              </h2>
+              <p 
+                className="text-lg max-w-2xl mx-auto"
+                style={{ color: content.subtitleColor || '#475569' }}
+              >
+                {content.subtitle}
+              </p>
             </>
           ) : (
             <>
@@ -65,13 +90,17 @@ export const FeaturesBlock = ({ block, onUpdate, isPreview }: FeaturesBlockProps
                 as="h2"
                 value={content.title}
                 onChange={(v) => updateField('title', v)}
-                className="text-3xl font-bold text-slate-900 mb-4"
+                color={content.titleColor || '#0f172a'}
+                onColorChange={(c) => updateField('titleColor', c)}
+                className="text-3xl font-bold mb-4"
               />
               <EditableText
                 as="p"
                 value={content.subtitle}
                 onChange={(v) => updateField('subtitle', v)}
-                className="text-lg text-slate-600 max-w-2xl mx-auto block"
+                color={content.subtitleColor || '#475569'}
+                onColorChange={(c) => updateField('subtitleColor', c)}
+                className="text-lg max-w-2xl mx-auto block"
               />
             </>
           )}
