@@ -8,7 +8,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { ComponentBlock } from '@/types/builder';
 import { BlockRenderer } from './BlockRenderer';
 import { ButtonEditConfig, TextEditConfig, ImageEditConfig } from './types';
-import { Trash2, GripVertical, Paintbrush } from 'lucide-react';
+import { Trash2, GripVertical, Paintbrush, ArrowUpDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface SortableBlockProps {
@@ -146,34 +146,22 @@ export const BuilderCanvas = ({
         <div
           className={`canvas-dropzone overflow-hidden ${isDarkTheme ? 'bg-slate-900' : 'bg-canvas'} ${
             isOver ? 'canvas-dropzone-active' : ''
-          } ${blocks.length === 0 ? 'flex items-center justify-center' : 'border-0'}`}
+          } ${blocks.length === 0 ? 'flex items-center justify-center min-h-[400px]' : 'border-0'}`}
         >
           {blocks.length === 0 ? (
             <div className="text-center p-10">
-              <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center mx-auto mb-4">
                 <motion.div
-                  animate={{ y: [0, -3, 0] }}
+                  animate={{ y: [0, -4, 0] }}
                   transition={{ repeat: Infinity, duration: 2 }}
                 >
-                  <svg
-                    className="w-5 h-5 text-muted-foreground"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                    />
-                  </svg>
+                  <ArrowUpDown className="w-6 h-6 text-muted-foreground" />
                 </motion.div>
               </div>
-              <h3 className="text-sm font-medium text-foreground mb-1">
+              <h3 className="text-base font-medium text-foreground mb-1.5">
                 Drop components here
               </h3>
-              <p className="text-xs text-muted-foreground max-w-[200px] mx-auto">
+              <p className="text-sm text-muted-foreground max-w-[220px] mx-auto">
                 Drag from the sidebar or choose a template to start
               </p>
             </div>

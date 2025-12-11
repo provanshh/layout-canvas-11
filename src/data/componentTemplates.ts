@@ -5,7 +5,7 @@ export const componentTemplates: ComponentTemplate[] = [
     type: 'navbar',
     label: 'Navigation Bar',
     icon: 'Menu',
-    description: 'Customizable navigation with editable links',
+    description: 'Customizable navigation...',
     defaultContent: {
       logoText: 'Brand',
       navLink1Label: 'Home',
@@ -23,7 +23,7 @@ export const componentTemplates: ComponentTemplate[] = [
     type: 'themeToggle',
     label: 'Theme Toggle',
     icon: 'SunMoon',
-    description: 'Light/dark mode toggle button',
+    description: 'Light/dark mode toggle...',
     defaultContent: {
       label: 'Toggle Theme',
     },
@@ -32,7 +32,7 @@ export const componentTemplates: ComponentTemplate[] = [
     type: 'hero',
     label: 'Hero Section',
     icon: 'Sparkles',
-    description: 'Eye-catching header with headline and CTA',
+    description: 'Eye-catching header w...',
     defaultContent: {
       headline: 'Build Something Amazing',
       subheadline: 'Create beautiful, responsive websites without writing a single line of code. Drag, drop, and publish.',
@@ -44,7 +44,7 @@ export const componentTemplates: ComponentTemplate[] = [
     type: 'features',
     label: 'Features Grid',
     icon: 'Grid3x3',
-    description: 'Showcase key features or benefits',
+    description: 'Showcase key feature...',
     defaultContent: {
       title: 'Why Choose Us',
       subtitle: 'Everything you need to build modern web experiences',
@@ -60,7 +60,7 @@ export const componentTemplates: ComponentTemplate[] = [
     type: 'testimonials',
     label: 'Testimonials',
     icon: 'Quote',
-    description: 'Customer reviews and social proof',
+    description: 'Customer reviews and ...',
     defaultContent: {
       title: 'What People Say',
       quote1: 'This tool completely transformed how we build landing pages. Absolutely incredible!',
