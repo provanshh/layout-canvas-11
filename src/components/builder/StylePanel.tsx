@@ -87,9 +87,9 @@ export const StylePanel = ({ block, onUpdateStyles, onClose }: StylePanelProps) 
           
           <div className="space-y-4">
             <div>
-              <label className="text-xs text-muted-foreground mb-2 block">Padding Top: {styles.paddingTop || '48'}px</label>
+              <label className="text-xs text-muted-foreground mb-2 block">Padding Top: {styles.paddingTop || '0'}px</label>
               <Slider
-                value={[parseInt(styles.paddingTop || '48')]}
+                value={[parseInt(styles.paddingTop || '0')]}
                 onValueChange={(value) => handleStyleChange('paddingTop', value[0].toString())}
                 max={120}
                 step={8}
@@ -98,9 +98,9 @@ export const StylePanel = ({ block, onUpdateStyles, onClose }: StylePanelProps) 
             </div>
             
             <div>
-              <label className="text-xs text-muted-foreground mb-2 block">Padding Bottom: {styles.paddingBottom || '48'}px</label>
+              <label className="text-xs text-muted-foreground mb-2 block">Padding Bottom: {styles.paddingBottom || '0'}px</label>
               <Slider
-                value={[parseInt(styles.paddingBottom || '48')]}
+                value={[parseInt(styles.paddingBottom || '0')]}
                 onValueChange={(value) => handleStyleChange('paddingBottom', value[0].toString())}
                 max={120}
                 step={8}
