@@ -33,7 +33,8 @@ const Index = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showStylePanel, setShowStylePanel] = useState(false);
   const [stylePanelBlockId, setStylePanelBlockId] = useState<string | null>(null);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false); // Preview/website theme
+  const [isEditorDark, setIsEditorDark] = useState(false); // Editor UI theme
   const [showLayoutOverview, setShowLayoutOverview] = useState(false);
 
   const sensors = useSensors(
@@ -121,8 +122,12 @@ const Index = () => {
     setSelectedBlockId(id);
   };
 
-  const handleToggleTheme = () => {
+  const handleTogglePreviewTheme = () => {
     setIsDarkTheme(!isDarkTheme);
+  };
+
+  const handleToggleEditorTheme = () => {
+    setIsEditorDark(!isEditorDark);
   };
 
   const handleReorderBlocks = (newBlocks: ComponentBlock[]) => {
@@ -134,19 +139,20 @@ const Index = () => {
     : null;
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
-      <BuilderToolbar
-        onPreview={() => setShowPreview(true)}
-        onExport={() => setShowExport(true)}
-        blockCount={blocks.length}
-        canUndo={canUndo}
-        canRedo={canRedo}
-        onUndo={undo}
-        onRedo={redo}
-        isDarkTheme={isDarkTheme}
-        onToggleTheme={handleToggleTheme}
-        onOpenLayoutOverview={() => setShowLayoutOverview(true)}
-      />
+    <div className={`h-screen flex flex-col overflow-hidden ${isEditorDark ? 'dark' : ''}`}>
+      <div className="h-full flex flex-col bg-background">
+        <BuilderToolbar
+          onPreview={() => setShowPreview(true)}
+          onExport={() => setShowExport(true)}
+          blockCount={blocks.length}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          onUndo={undo}
+          onRedo={redo}
+          isDarkTheme={isEditorDark}
+          onToggleTheme={handleToggleEditorTheme}
+          onOpenLayoutOverview={() => setShowLayoutOverview(true)}
+        />
       
       <div className="flex-1 flex overflow-hidden">
         <DndContext
@@ -155,7 +161,7 @@ const Index = () => {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <ComponentSidebar 
+          <ComponentSidebar
             isCollapsed={sidebarCollapsed}
             onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
           />
@@ -167,7 +173,7 @@ const Index = () => {
             onSelectBlock={setSelectedBlockId}
             onOpenStylePanel={handleOpenStylePanel}
             isDarkTheme={isDarkTheme}
-            onToggleTheme={handleToggleTheme}
+            onToggleTheme={handleTogglePreviewTheme}
           />
           <DragOverlay>
             {activeId && activeId.startsWith('template-') && (
@@ -214,6 +220,7 @@ const Index = () => {
         onReorder={handleReorderBlocks}
         onDelete={handleDeleteBlock}
       />
+      </div>
     </div>
   );
 };
