@@ -109,6 +109,7 @@ const SortableBlock = ({
       onClick={(e) => {
         e.stopPropagation();
         onSelect();
+        onOpenStylePanel();
       }}
     >
       {/* Block Controls */}
