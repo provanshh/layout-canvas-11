@@ -16,15 +16,35 @@ import { BlogBlock } from './blocks/BlogBlock';
 import { NewsletterBlock } from './blocks/NewsletterBlock';
 import { CTABannerBlock } from './blocks/CTABannerBlock';
 
+export interface ButtonEditConfig {
+  text: string;
+  bgColor: string;
+  textColor: string;
+  paddingX: number;
+  paddingY: number;
+  borderRadius: number;
+  link: string;
+  openInNewTab: boolean;
+  onTextChange: (v: string) => void;
+  onBgColorChange: (v: string) => void;
+  onTextColorChange: (v: string) => void;
+  onPaddingXChange: (v: number) => void;
+  onPaddingYChange: (v: number) => void;
+  onBorderRadiusChange: (v: number) => void;
+  onLinkChange: (v: string) => void;
+  onOpenInNewTabChange: (v: boolean) => void;
+}
+
 interface BlockRendererProps {
   block: ComponentBlock;
   onUpdate: (content: Record<string, string>) => void;
   isPreview?: boolean;
   isDarkTheme?: boolean;
   onToggleTheme?: () => void;
+  onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
 }
 
-export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme, onToggleTheme }: BlockRendererProps) => {
+export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme, onToggleTheme, onEditButton }: BlockRendererProps) => {
   const blockComponents = {
     navbar: NavbarBlock,
     themeToggle: ThemeToggleBlock,
@@ -72,6 +92,7 @@ export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme, onToggl
         isPreview={isPreview} 
         isDarkTheme={isDarkTheme}
         onToggleTheme={onToggleTheme}
+        onEditButton={onEditButton}
       />
     </div>
   );

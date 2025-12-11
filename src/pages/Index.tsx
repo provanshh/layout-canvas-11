@@ -21,7 +21,9 @@ import { ExportModal } from '@/components/builder/ExportModal';
 import { StylePanel } from '@/components/builder/StylePanel';
 import { LayoutOverviewModal } from '@/components/builder/LayoutOverviewModal';
 import { TemplatesModal } from '@/components/builder/TemplatesModal';
+import { ButtonEditPanel } from '@/components/builder/ButtonEditPanel';
 import { useBuilderHistory } from '@/hooks/useBuilderHistory';
+import { ButtonEditConfig } from '@/components/builder/BlockRenderer';
 
 const generateId = () => `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
@@ -38,6 +40,10 @@ const Index = () => {
   const [isEditorDark, setIsEditorDark] = useState(false); // Editor UI theme
   const [showLayoutOverview, setShowLayoutOverview] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  
+  // Button edit panel state
+  const [showButtonPanel, setShowButtonPanel] = useState(false);
+  const [buttonEditConfig, setButtonEditConfig] = useState<ButtonEditConfig | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -122,6 +128,7 @@ const Index = () => {
     setStylePanelBlockId(id);
     setShowStylePanel(true);
     setSelectedBlockId(id);
+    setShowButtonPanel(false);
   };
 
   const handleTogglePreviewTheme = () => {
@@ -138,6 +145,17 @@ const Index = () => {
 
   const handleSelectTemplate = (newBlocks: ComponentBlock[]) => {
     setBlocks(newBlocks);
+  };
+
+  const handleEditButton = useCallback((buttonId: string, config: ButtonEditConfig) => {
+    setButtonEditConfig(config);
+    setShowButtonPanel(true);
+    setShowStylePanel(false);
+  }, []);
+
+  const handleCloseButtonPanel = () => {
+    setShowButtonPanel(false);
+    setButtonEditConfig(null);
   };
 
   const selectedBlock = stylePanelBlockId
@@ -181,6 +199,7 @@ const Index = () => {
             onOpenStylePanel={handleOpenStylePanel}
             isDarkTheme={isDarkTheme}
             onToggleTheme={handleTogglePreviewTheme}
+            onEditButton={handleEditButton}
           />
           <DragOverlay>
             {activeId && activeId.startsWith('template-') && (
@@ -203,6 +222,29 @@ const Index = () => {
               setShowStylePanel(false);
               setStylePanelBlockId(null);
             }}
+          />
+        )}
+
+        {showButtonPanel && buttonEditConfig && (
+          <ButtonEditPanel
+            isOpen={showButtonPanel}
+            onClose={handleCloseButtonPanel}
+            buttonText={buttonEditConfig.text}
+            onTextChange={buttonEditConfig.onTextChange}
+            bgColor={buttonEditConfig.bgColor}
+            onBgColorChange={buttonEditConfig.onBgColorChange}
+            textColor={buttonEditConfig.textColor}
+            onTextColorChange={buttonEditConfig.onTextColorChange}
+            link={buttonEditConfig.link}
+            onLinkChange={buttonEditConfig.onLinkChange}
+            openInNewTab={buttonEditConfig.openInNewTab}
+            onOpenInNewTabChange={buttonEditConfig.onOpenInNewTabChange}
+            paddingX={buttonEditConfig.paddingX}
+            onPaddingXChange={buttonEditConfig.onPaddingXChange}
+            paddingY={buttonEditConfig.paddingY}
+            onPaddingYChange={buttonEditConfig.onPaddingYChange}
+            borderRadius={buttonEditConfig.borderRadius}
+            onBorderRadiusChange={buttonEditConfig.onBorderRadiusChange}
           />
         )}
       </div>

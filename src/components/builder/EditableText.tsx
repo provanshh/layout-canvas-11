@@ -120,16 +120,19 @@ export const EditableText = ({
 
   if (isEditing && !isPopoverOpen) {
     return (
-      <input
-        ref={inputRef as React.RefObject<HTMLInputElement>}
-        type="text"
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-        className={`editable-text w-full bg-transparent ${className}`}
-        style={getInlineStyles()}
-      />
+      <Component className={className} style={{ ...getInlineStyles(), position: 'relative' }}>
+        <input
+          ref={inputRef as React.RefObject<HTMLInputElement>}
+          type="text"
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          className="editable-text absolute inset-0 w-full h-full bg-transparent border-none outline-none"
+          style={{ ...getInlineStyles(), font: 'inherit', padding: 0, margin: 0 }}
+        />
+        <span className="invisible">{editValue || ' '}</span>
+      </Component>
     );
   }
 

@@ -6,7 +6,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ComponentBlock } from '@/types/builder';
-import { BlockRenderer } from './BlockRenderer';
+import { BlockRenderer, ButtonEditConfig } from './BlockRenderer';
 import { Trash2, GripVertical, Paintbrush } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,9 +19,10 @@ interface SortableBlockProps {
   onOpenStylePanel: () => void;
   isDarkTheme: boolean;
   onToggleTheme: () => void;
+  onEditButton: (buttonId: string, config: ButtonEditConfig) => void;
 }
 
-const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect, onOpenStylePanel, isDarkTheme, onToggleTheme }: SortableBlockProps) => {
+const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect, onOpenStylePanel, isDarkTheme, onToggleTheme, onEditButton }: SortableBlockProps) => {
   const {
     attributes,
     listeners,
@@ -81,6 +82,7 @@ const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect, onOpen
         onUpdate={(content) => onUpdate(block.id, content)}
         isDarkTheme={isDarkTheme}
         onToggleTheme={onToggleTheme}
+        onEditButton={onEditButton}
       />
     </motion.div>
   );
@@ -95,6 +97,7 @@ interface BuilderCanvasProps {
   onOpenStylePanel: (id: string) => void;
   isDarkTheme: boolean;
   onToggleTheme: () => void;
+  onEditButton: (buttonId: string, config: ButtonEditConfig) => void;
 }
 
 export const BuilderCanvas = ({
@@ -106,6 +109,7 @@ export const BuilderCanvas = ({
   onOpenStylePanel,
   isDarkTheme,
   onToggleTheme,
+  onEditButton,
 }: BuilderCanvasProps) => {
   const { setNodeRef, isOver } = useDroppable({
     id: 'canvas',
@@ -169,6 +173,7 @@ export const BuilderCanvas = ({
                     onOpenStylePanel={() => onOpenStylePanel(block.id)}
                     isDarkTheme={isDarkTheme}
                     onToggleTheme={onToggleTheme}
+                    onEditButton={onEditButton}
                   />
                 ))}
               </AnimatePresence>
