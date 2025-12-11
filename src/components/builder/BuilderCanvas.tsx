@@ -6,7 +6,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ComponentBlock } from '@/types/builder';
-import { BlockRenderer, ButtonEditConfig } from './BlockRenderer';
+import { BlockRenderer } from './BlockRenderer';
+import { ButtonEditConfig, TextEditConfig, ImageEditConfig } from './types';
 import { Trash2, GripVertical, Paintbrush } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -20,9 +21,23 @@ interface SortableBlockProps {
   isDarkTheme: boolean;
   onToggleTheme: () => void;
   onEditButton: (buttonId: string, config: ButtonEditConfig) => void;
+  onEditText: (textId: string, config: TextEditConfig) => void;
+  onEditImage: (imageId: string, config: ImageEditConfig) => void;
 }
 
-const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect, onOpenStylePanel, isDarkTheme, onToggleTheme, onEditButton }: SortableBlockProps) => {
+const SortableBlock = ({ 
+  block, 
+  onUpdate, 
+  onDelete, 
+  isSelected, 
+  onSelect, 
+  onOpenStylePanel, 
+  isDarkTheme, 
+  onToggleTheme, 
+  onEditButton,
+  onEditText,
+  onEditImage,
+}: SortableBlockProps) => {
   const {
     attributes,
     listeners,
@@ -83,6 +98,8 @@ const SortableBlock = ({ block, onUpdate, onDelete, isSelected, onSelect, onOpen
         isDarkTheme={isDarkTheme}
         onToggleTheme={onToggleTheme}
         onEditButton={onEditButton}
+        onEditText={onEditText}
+        onEditImage={onEditImage}
       />
     </motion.div>
   );
@@ -98,6 +115,8 @@ interface BuilderCanvasProps {
   isDarkTheme: boolean;
   onToggleTheme: () => void;
   onEditButton: (buttonId: string, config: ButtonEditConfig) => void;
+  onEditText: (textId: string, config: TextEditConfig) => void;
+  onEditImage: (imageId: string, config: ImageEditConfig) => void;
 }
 
 export const BuilderCanvas = ({
@@ -110,6 +129,8 @@ export const BuilderCanvas = ({
   isDarkTheme,
   onToggleTheme,
   onEditButton,
+  onEditText,
+  onEditImage,
 }: BuilderCanvasProps) => {
   const { setNodeRef, isOver } = useDroppable({
     id: 'canvas',
@@ -174,6 +195,8 @@ export const BuilderCanvas = ({
                     isDarkTheme={isDarkTheme}
                     onToggleTheme={onToggleTheme}
                     onEditButton={onEditButton}
+                    onEditText={onEditText}
+                    onEditImage={onEditImage}
                   />
                 ))}
               </AnimatePresence>

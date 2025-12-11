@@ -15,25 +15,9 @@ import { TeamBlock } from './blocks/TeamBlock';
 import { BlogBlock } from './blocks/BlogBlock';
 import { NewsletterBlock } from './blocks/NewsletterBlock';
 import { CTABannerBlock } from './blocks/CTABannerBlock';
+import { ButtonEditConfig, TextEditConfig, ImageEditConfig } from './types';
 
-export interface ButtonEditConfig {
-  text: string;
-  bgColor: string;
-  textColor: string;
-  paddingX: number;
-  paddingY: number;
-  borderRadius: number;
-  link: string;
-  openInNewTab: boolean;
-  onTextChange: (v: string) => void;
-  onBgColorChange: (v: string) => void;
-  onTextColorChange: (v: string) => void;
-  onPaddingXChange: (v: number) => void;
-  onPaddingYChange: (v: number) => void;
-  onBorderRadiusChange: (v: number) => void;
-  onLinkChange: (v: string) => void;
-  onOpenInNewTabChange: (v: boolean) => void;
-}
+export type { ButtonEditConfig, TextEditConfig, ImageEditConfig };
 
 interface BlockRendererProps {
   block: ComponentBlock;
@@ -42,10 +26,21 @@ interface BlockRendererProps {
   isDarkTheme?: boolean;
   onToggleTheme?: () => void;
   onEditButton?: (buttonId: string, config: ButtonEditConfig) => void;
+  onEditText?: (textId: string, config: TextEditConfig) => void;
+  onEditImage?: (imageId: string, config: ImageEditConfig) => void;
 }
 
-export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme, onToggleTheme, onEditButton }: BlockRendererProps) => {
-  const blockComponents = {
+export const BlockRenderer = ({ 
+  block, 
+  onUpdate, 
+  isPreview, 
+  isDarkTheme, 
+  onToggleTheme, 
+  onEditButton,
+  onEditText,
+  onEditImage,
+}: BlockRendererProps) => {
+  const blockComponents: Record<string, React.ComponentType<any>> = {
     navbar: NavbarBlock,
     themeToggle: ThemeToggleBlock,
     hero: HeroBlock,
@@ -70,7 +65,6 @@ export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme, onToggl
     return <div className="p-4 text-muted-foreground">Unknown block type: {block.type}</div>;
   }
 
-  // Apply custom styles if present
   const customStyles: React.CSSProperties = {};
   if (block.content.styleBgColor) customStyles.backgroundColor = block.content.styleBgColor;
   if (block.content.styleTextColor) customStyles.color = block.content.styleTextColor;
@@ -93,6 +87,8 @@ export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme, onToggl
         isDarkTheme={isDarkTheme}
         onToggleTheme={onToggleTheme}
         onEditButton={onEditButton}
+        onEditText={onEditText}
+        onEditImage={onEditImage}
       />
     </div>
   );

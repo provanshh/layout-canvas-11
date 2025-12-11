@@ -22,8 +22,10 @@ import { StylePanel } from '@/components/builder/StylePanel';
 import { LayoutOverviewModal } from '@/components/builder/LayoutOverviewModal';
 import { TemplatesModal } from '@/components/builder/TemplatesModal';
 import { ButtonEditPanel } from '@/components/builder/ButtonEditPanel';
+import { TextEditPanel } from '@/components/builder/TextEditPanel';
+import { ImageEditPanel } from '@/components/builder/ImageEditPanel';
 import { useBuilderHistory } from '@/hooks/useBuilderHistory';
-import { ButtonEditConfig } from '@/components/builder/BlockRenderer';
+import { ButtonEditConfig, TextEditConfig, ImageEditConfig } from '@/components/builder/types';
 
 const generateId = () => `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
@@ -36,14 +38,18 @@ const Index = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showStylePanel, setShowStylePanel] = useState(false);
   const [stylePanelBlockId, setStylePanelBlockId] = useState<string | null>(null);
-  const [isDarkTheme, setIsDarkTheme] = useState(false); // Preview/website theme
-  const [isEditorDark, setIsEditorDark] = useState(false); // Editor UI theme
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isEditorDark, setIsEditorDark] = useState(false);
   const [showLayoutOverview, setShowLayoutOverview] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   
-  // Button edit panel state
+  // Panel states
   const [showButtonPanel, setShowButtonPanel] = useState(false);
   const [buttonEditConfig, setButtonEditConfig] = useState<ButtonEditConfig | null>(null);
+  const [showTextPanel, setShowTextPanel] = useState(false);
+  const [textEditConfig, setTextEditConfig] = useState<TextEditConfig | null>(null);
+  const [showImagePanel, setShowImagePanel] = useState(false);
+  const [imageEditConfig, setImageEditConfig] = useState<ImageEditConfig | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -66,7 +72,6 @@ const Index = () => {
 
     if (!over) return;
 
-    // Check if dragging from sidebar (new component)
     if (active.id.toString().startsWith('template-')) {
       const template = active.data.current?.template as ComponentTemplate;
       if (template) {
@@ -76,7 +81,6 @@ const Index = () => {
           content: { ...template.defaultContent },
         };
 
-        // Find insertion index
         const overIndex = blocks.findIndex((b) => b.id === over.id);
         const insertIndex = overIndex >= 0 ? overIndex : blocks.length;
         
@@ -87,7 +91,6 @@ const Index = () => {
       return;
     }
 
-    // Reordering existing blocks
     if (active.id !== over.id) {
       const oldIndex = blocks.findIndex((b) => b.id === active.id);
       const newIndex = blocks.findIndex((b) => b.id === over.id);
@@ -104,7 +107,7 @@ const Index = () => {
         blocks.map((block) =>
           block.id === id ? { ...block, content } : block
         ),
-        true // Skip history for content updates
+        true
       );
     },
     [blocks, setBlocks]
@@ -128,7 +131,7 @@ const Index = () => {
     setStylePanelBlockId(id);
     setShowStylePanel(true);
     setSelectedBlockId(id);
-    setShowButtonPanel(false);
+    closeAllPanels();
   };
 
   const handleTogglePreviewTheme = () => {
@@ -147,15 +150,50 @@ const Index = () => {
     setBlocks(newBlocks);
   };
 
+  const closeAllPanels = () => {
+    setShowButtonPanel(false);
+    setShowTextPanel(false);
+    setShowImagePanel(false);
+    setShowStylePanel(false);
+  };
+
   const handleEditButton = useCallback((buttonId: string, config: ButtonEditConfig) => {
+    setShowTextPanel(false);
+    setShowImagePanel(false);
+    setShowStylePanel(false);
     setButtonEditConfig(config);
     setShowButtonPanel(true);
+  }, []);
+
+  const handleEditText = useCallback((textId: string, config: TextEditConfig) => {
+    setShowButtonPanel(false);
+    setShowImagePanel(false);
     setShowStylePanel(false);
+    setTextEditConfig(config);
+    setShowTextPanel(true);
+  }, []);
+
+  const handleEditImage = useCallback((imageId: string, config: ImageEditConfig) => {
+    setShowButtonPanel(false);
+    setShowTextPanel(false);
+    setShowStylePanel(false);
+    setImageEditConfig(config);
+    setShowImagePanel(true);
   }, []);
 
   const handleCloseButtonPanel = () => {
     setShowButtonPanel(false);
     setButtonEditConfig(null);
+  };
+
+  const handleCloseTextPanel = () => {
+    setShowTextPanel(false);
+    setTextEditConfig(null);
+  };
+
+  const handleCloseImagePanel = () => {
+    setShowImagePanel(false);
+    setImageEditConfig(null);
   };
 
   const selectedBlock = stylePanelBlockId
@@ -200,6 +238,8 @@ const Index = () => {
             isDarkTheme={isDarkTheme}
             onToggleTheme={handleTogglePreviewTheme}
             onEditButton={handleEditButton}
+            onEditText={handleEditText}
+            onEditImage={handleEditImage}
           />
           <DragOverlay>
             {activeId && activeId.startsWith('template-') && (
@@ -245,6 +285,41 @@ const Index = () => {
             onPaddingYChange={buttonEditConfig.onPaddingYChange}
             borderRadius={buttonEditConfig.borderRadius}
             onBorderRadiusChange={buttonEditConfig.onBorderRadiusChange}
+          />
+        )}
+
+        {showTextPanel && textEditConfig && (
+          <TextEditPanel
+            isOpen={showTextPanel}
+            onClose={handleCloseTextPanel}
+            text={textEditConfig.text}
+            onTextChange={textEditConfig.onTextChange}
+            color={textEditConfig.color}
+            onColorChange={textEditConfig.onColorChange}
+            link={textEditConfig.link}
+            onLinkChange={textEditConfig.onLinkChange}
+            openInNewTab={textEditConfig.openInNewTab}
+            onOpenInNewTabChange={textEditConfig.onOpenInNewTabChange}
+            fontStyle={textEditConfig.fontStyle}
+            onFontStyleChange={textEditConfig.onFontStyleChange}
+            isMultiline={textEditConfig.isMultiline}
+          />
+        )}
+
+        {showImagePanel && imageEditConfig && (
+          <ImageEditPanel
+            isOpen={showImagePanel}
+            onClose={handleCloseImagePanel}
+            imageUrl={imageEditConfig.imageUrl}
+            onImageUrlChange={imageEditConfig.onImageUrlChange}
+            alt={imageEditConfig.alt}
+            onAltChange={imageEditConfig.onAltChange}
+            overlayColor={imageEditConfig.overlayColor}
+            onOverlayColorChange={imageEditConfig.onOverlayColorChange}
+            overlayOpacity={imageEditConfig.overlayOpacity}
+            onOverlayOpacityChange={imageEditConfig.onOverlayOpacityChange}
+            borderRadius={imageEditConfig.borderRadius}
+            onBorderRadiusChange={imageEditConfig.onBorderRadiusChange}
           />
         )}
       </div>
