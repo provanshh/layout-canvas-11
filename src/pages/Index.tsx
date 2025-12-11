@@ -19,6 +19,7 @@ import { BuilderToolbar } from '@/components/builder/BuilderToolbar';
 import { PreviewModal } from '@/components/builder/PreviewModal';
 import { ExportModal } from '@/components/builder/ExportModal';
 import { StylePanel } from '@/components/builder/StylePanel';
+import { LayoutOverviewModal } from '@/components/builder/LayoutOverviewModal';
 import { useBuilderHistory } from '@/hooks/useBuilderHistory';
 
 const generateId = () => `block-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
@@ -33,6 +34,7 @@ const Index = () => {
   const [showStylePanel, setShowStylePanel] = useState(false);
   const [stylePanelBlockId, setStylePanelBlockId] = useState<string | null>(null);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [showLayoutOverview, setShowLayoutOverview] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -123,6 +125,10 @@ const Index = () => {
     setIsDarkTheme(!isDarkTheme);
   };
 
+  const handleReorderBlocks = (newBlocks: ComponentBlock[]) => {
+    setBlocks(newBlocks);
+  };
+
   const selectedBlock = stylePanelBlockId 
     ? blocks.find(b => b.id === stylePanelBlockId) || null 
     : null;
@@ -139,6 +145,7 @@ const Index = () => {
         onRedo={redo}
         isDarkTheme={isDarkTheme}
         onToggleTheme={handleToggleTheme}
+        onOpenLayoutOverview={() => setShowLayoutOverview(true)}
       />
       
       <div className="flex-1 flex overflow-hidden">
@@ -198,6 +205,14 @@ const Index = () => {
         isOpen={showExport}
         onClose={() => setShowExport(false)}
         blocks={blocks}
+      />
+
+      <LayoutOverviewModal
+        isOpen={showLayoutOverview}
+        onClose={() => setShowLayoutOverview(false)}
+        blocks={blocks}
+        onReorder={handleReorderBlocks}
+        onDelete={handleDeleteBlock}
       />
     </div>
   );

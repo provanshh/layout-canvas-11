@@ -9,7 +9,8 @@ export type ComponentType =
   | 'pricing'
   | 'faq'
   | 'footer'
-  | 'imageGallery';
+  | 'imageGallery'
+  | 'videoEmbed';
 
 export interface ComponentBlock {
   id: string;

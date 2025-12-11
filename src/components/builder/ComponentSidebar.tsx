@@ -16,6 +16,7 @@ import {
   Images,
   ChevronLeft,
   ChevronRight,
+  Video,
 } from 'lucide-react';
 
 const iconMap: Record<string, React.ElementType> = {
@@ -30,6 +31,7 @@ const iconMap: Record<string, React.ElementType> = {
   SunMoon,
   LayoutTemplate,
   Images,
+  Video,
 };
 
 interface DraggableItemProps {

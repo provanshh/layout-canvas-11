@@ -66,9 +66,23 @@ export const componentTemplates: ComponentTemplate[] = [
       quote1: 'This tool completely transformed how we build landing pages. Absolutely incredible!',
       author1: 'Sarah Johnson',
       role1: 'CEO, TechStart',
+      avatar1: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face',
       quote2: 'The best no-code builder I have ever used. Simple, powerful, and beautiful results.',
       author2: 'Mike Chen',
       role2: 'Designer, Creative Co',
+      avatar2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+    },
+  },
+  {
+    type: 'videoEmbed',
+    label: 'Video Embed',
+    icon: 'Video',
+    description: 'Embed YouTube or Vimeo videos',
+    defaultContent: {
+      title: 'Watch Our Story',
+      subtitle: 'See how we can help you build amazing things',
+      videoUrl: '',
+      caption: 'Learn more about our journey',
     },
   },
   {

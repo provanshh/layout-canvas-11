@@ -10,6 +10,7 @@ interface BuilderToolbarProps {
   onRedo: () => void;
   isDarkTheme: boolean;
   onToggleTheme: () => void;
+  onOpenLayoutOverview: () => void;
 }
 
 export const BuilderToolbar = ({
@@ -22,6 +23,7 @@ export const BuilderToolbar = ({
   onRedo,
   isDarkTheme,
   onToggleTheme,
+  onOpenLayoutOverview,
 }: BuilderToolbarProps) => {
   return (
     <header className="h-14 bg-card border-b border-border flex items-center justify-between px-4">
@@ -33,9 +35,12 @@ export const BuilderToolbar = ({
           <span className="font-semibold text-foreground">LayoutBuilder</span>
         </div>
         <div className="h-6 w-px bg-border" />
-        <span className="text-sm text-muted-foreground">
+        <button
+          onClick={onOpenLayoutOverview}
+          className="text-sm text-muted-foreground hover:text-foreground hover:bg-muted px-2 py-1 rounded transition-colors"
+        >
           {blockCount} {blockCount === 1 ? 'component' : 'components'}
-        </span>
+        </button>
       </div>
 
       <div className="flex items-center gap-2">

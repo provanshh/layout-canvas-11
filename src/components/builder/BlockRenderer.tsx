@@ -10,6 +10,7 @@ import { NavbarBlock } from './blocks/NavbarBlock';
 import { ThemeToggleBlock } from './blocks/ThemeToggleBlock';
 import { FooterBlock } from './blocks/FooterBlock';
 import { ImageGalleryBlock } from './blocks/ImageGalleryBlock';
+import { VideoEmbedBlock } from './blocks/VideoEmbedBlock';
 
 interface BlockRendererProps {
   block: ComponentBlock;
@@ -31,6 +32,7 @@ export const BlockRenderer = ({ block, onUpdate, isPreview, isDarkTheme }: Block
     faq: FAQBlock,
     footer: FooterBlock,
     imageGallery: ImageGalleryBlock,
+    videoEmbed: VideoEmbedBlock,
   };
 
   const Component = blockComponents[block.type];
