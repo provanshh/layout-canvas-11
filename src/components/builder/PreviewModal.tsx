@@ -92,6 +92,7 @@ export const PreviewModal = ({ isOpen, onClose, blocks, isDarkTheme = false }: P
                         isPreview
                         isDarkTheme={isDarkTheme}
                         forceMobileView={viewport === 'mobile'}
+                        allBlocks={blocks}
                       />
                     ))}
                   </div>
