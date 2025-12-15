@@ -2,33 +2,11 @@ import { BaseBlockProps } from '../types';
 import { EditableText } from '../EditableText';
 import { EditableButton } from '../EditableButton';
 import { Plus, X, Menu } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
-import { ComponentBlock } from '@/types/builder';
+import { useState } from 'react';
 
 interface NavbarBlockProps extends BaseBlockProps {
   forceMobileView?: boolean;
-  allBlocks?: ComponentBlock[];
 }
-
-// Map block types to readable nav labels
-const blockTypeToLabel: Record<string, string> = {
-  hero: 'Home',
-  features: 'Features',
-  pricing: 'Pricing',
-  testimonials: 'Testimonials',
-  team: 'Team',
-  contact: 'Contact',
-  faq: 'FAQ',
-  imageGallery: 'Gallery',
-  blog: 'Blog',
-  newsletter: 'Newsletter',
-  cta: 'CTA',
-  ctaBanner: 'Banner',
-  videoEmbed: 'Video',
-};
-
-// Block types that should appear in navbar
-const navEligibleBlocks = ['hero', 'features', 'pricing', 'testimonials', 'team', 'contact', 'faq', 'imageGallery', 'blog', 'newsletter', 'cta', 'ctaBanner', 'videoEmbed'];
 
 export const NavbarBlock = ({ 
   block, 
@@ -36,8 +14,7 @@ export const NavbarBlock = ({
   isPreview,
   onEditButton,
   onEditText,
-  forceMobileView = false,
-  allBlocks = []
+  forceMobileView = false
 }: NavbarBlockProps) => {
   const { content } = block;
   const [hoveredLink, setHoveredLink] = useState<number | null>(null);
@@ -45,18 +22,6 @@ export const NavbarBlock = ({
   
   const isMobile = forceMobileView;
 
-  // Auto-generate nav links from sections
-  const autoNavLinks = useMemo(() => {
-    return allBlocks
-      .filter(b => navEligibleBlocks.includes(b.type))
-      .map(b => ({
-        label: b.content?.sectionTitle || blockTypeToLabel[b.type] || b.type,
-        href: `#section-${b.id}`,
-        blockId: b.id,
-      }));
-  }, [allBlocks]);
-
-  // Use auto-generated links if no manual links exist, otherwise use manual
   const getNavLinks = () => {
     const links: { label: string; href: string }[] = [];
     let i = 1;
@@ -70,22 +35,7 @@ export const NavbarBlock = ({
     return links;
   };
 
-  const manualLinks = getNavLinks();
-  
-  // Auto-sync nav links when sections change (only if no manual customization)
-  useEffect(() => {
-    if (manualLinks.length === 0 && autoNavLinks.length > 0 && !isPreview) {
-      const newContent: Record<string, string> = { ...content };
-      autoNavLinks.forEach((link, idx) => {
-        newContent[`navLink${idx + 1}Label`] = link.label;
-        newContent[`navLink${idx + 1}Href`] = link.href;
-      });
-      onUpdate(newContent);
-    }
-  }, [autoNavLinks.length]);
-
-  // Use manual links if they exist, otherwise use auto-generated
-  const navLinks = manualLinks.length > 0 ? manualLinks : autoNavLinks;
+  const navLinks = getNavLinks();
 
   const handleUpdateField = (field: string, value: string) => {
     onUpdate({ ...content, [field]: value });
@@ -118,36 +68,11 @@ export const NavbarBlock = ({
     onUpdate(newContent);
   };
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith('#section-')) {
-      e.preventDefault();
-      const targetId = href.replace('#', '');
-      const targetElement = document.querySelector(`[data-section-id="${targetId}"]`) || 
-                           document.querySelector(`[data-block-id="${href.replace('#section-', '')}"]`);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      setMobileMenuOpen(false);
-    } else if (href.startsWith('#') && href.length > 1) {
-      e.preventDefault();
-      const targetElement = document.querySelector(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      setMobileMenuOpen(false);
-    }
-  };
-
-  // Dynamic sizing based on number of links
-  const linkCount = navLinks.length;
-  const linkSize = linkCount > 6 ? 'text-xs px-2' : linkCount > 4 ? 'text-sm px-3' : 'text-sm px-4';
-  const gapSize = linkCount > 6 ? 'gap-2' : linkCount > 4 ? 'gap-3' : 'gap-6';
-
   return (
     <nav className="bg-slate-900 text-white px-4 md:px-6 py-4">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center">
             <span className="font-bold text-slate-900 text-sm">
               {(content.logoText || 'L').charAt(0)}
@@ -165,7 +90,7 @@ export const NavbarBlock = ({
 
         {/* Desktop Navigation */}
         {!isMobile && (
-          <div className={`hidden md:flex items-center ${gapSize} flex-wrap justify-center`}>
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link, idx) => (
               <div
                 key={idx}
@@ -173,20 +98,14 @@ export const NavbarBlock = ({
                 onMouseEnter={() => setHoveredLink(idx)}
                 onMouseLeave={() => setHoveredLink(null)}
               >
-                <a
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className={`text-slate-300 hover:text-white transition-colors cursor-pointer whitespace-nowrap ${linkSize}`}
-                >
-                  <EditableText
-                    value={link.label}
-                    onChange={(val) => handleUpdateField(`navLink${idx + 1}Label`, val)}
-                    className="inline"
-                    isPreview={isPreview}
-                    onEditText={onEditText}
-                    textId={`${block.id}-navLink${idx + 1}`}
-                  />
-                </a>
+                <EditableText
+                  value={link.label}
+                  onChange={(val) => handleUpdateField(`navLink${idx + 1}Label`, val)}
+                  className="text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  isPreview={isPreview}
+                  onEditText={onEditText}
+                  textId={`${block.id}-navLink${idx + 1}`}
+                />
                 {!isPreview && hoveredLink === idx && (
                   <button
                     onClick={() => removeNavLink(idx + 1)}
@@ -201,7 +120,7 @@ export const NavbarBlock = ({
             {!isPreview && (
               <button
                 onClick={addNavLink}
-                className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center hover:bg-cyan-500/30 transition-colors flex-shrink-0"
+                className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center hover:bg-cyan-500/30 transition-colors"
                 title="Add nav link"
               >
                 <Plus className="w-4 h-4" />
@@ -211,7 +130,7 @@ export const NavbarBlock = ({
         )}
 
         {/* Desktop CTA + Mobile Hamburger */}
-        <div className="flex items-center gap-3 flex-shrink-0">
+        <div className="flex items-center gap-3">
           {/* Desktop CTA */}
           {!isMobile && (
             <div className="hidden md:block">
@@ -220,7 +139,7 @@ export const NavbarBlock = ({
                 bgColor={content.ctaColor || '#06b6d4'}
                 textColor={content.ctaTextColor || '#0f172a'}
                 link={content.ctaLink || '#'}
-                className={`${linkCount > 6 ? 'px-3 py-1.5 text-sm' : 'px-4 py-2'} rounded-lg font-medium`}
+                className="px-4 py-2 rounded-lg font-medium"
                 isPreview={isPreview}
                 onEditButton={onEditButton}
                 buttonId={`${block.id}-cta-btn`}
@@ -250,8 +169,8 @@ export const NavbarBlock = ({
               <a
                 key={idx}
                 href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
                 className="text-slate-300 hover:text-white transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}
               </a>

@@ -30,7 +30,6 @@ interface BlockRendererProps {
   onEditText?: (textId: string, config: TextEditConfig) => void;
   onEditImage?: (imageId: string, config: ImageEditConfig) => void;
   forceMobileView?: boolean;
-  allBlocks?: ComponentBlock[];
 }
 
 export const BlockRenderer = ({ 
@@ -43,7 +42,6 @@ export const BlockRenderer = ({
   onEditText,
   onEditImage,
   forceMobileView,
-  allBlocks = [],
 }: BlockRendererProps) => {
   const blockComponents: Record<string, React.ComponentType<any>> = {
     navbar: NavbarBlock,
@@ -85,12 +83,7 @@ export const BlockRenderer = ({
   }[block.content.styleSpacing || 'normal'] || '';
 
   return (
-    <div 
-      style={customStyles} 
-      className={spacingClass}
-      data-section-id={`section-${block.id}`}
-      id={`section-${block.id}`}
-    >
+    <div style={customStyles} className={spacingClass}>
       <Component 
         block={block} 
         onUpdate={onUpdate} 
@@ -101,7 +94,6 @@ export const BlockRenderer = ({
         onEditText={onEditText}
         onEditImage={onEditImage}
         forceMobileView={forceMobileView}
-        allBlocks={allBlocks}
       />
     </div>
   );
