@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface SortableBlockProps {
   block: ComponentBlock;
+  allBlocks: ComponentBlock[];
   onUpdate: (id: string, content: Record<string, string>) => void;
   onDelete: (id: string) => void;
   isSelected: boolean;
@@ -68,7 +69,8 @@ const getBlockStyles = (styles?: BlockStyles): React.CSSProperties => {
 };
 
 const SortableBlock = ({ 
-  block, 
+  block,
+  allBlocks, 
   onUpdate, 
   onDelete, 
   isSelected, 
@@ -176,6 +178,7 @@ const SortableBlock = ({
             onEditButton={onEditButton}
             onEditText={onEditText}
             onEditImage={onEditImage}
+            allBlocks={allBlocks}
           />
         </div>
       </div>
@@ -260,6 +263,7 @@ export const BuilderCanvas = ({
                   <SortableBlock
                     key={block.id}
                     block={block}
+                    allBlocks={blocks}
                     onUpdate={onUpdateBlock}
                     onDelete={onDeleteBlock}
                     isSelected={selectedBlockId === block.id}
